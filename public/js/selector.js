@@ -81,8 +81,8 @@
         };
         annotations.push(citation);
         console.dir(annotations);
-        var pin = $('<div style="border:1px solid green; width:10px; height:10px" class="pin"></div>');
-        pin.insertBefore();
+        var pin = $('<div style="background:green; border:1px solid green; width:10px; height:10px" class="pin"></div>');
+        pin.insertBefore($(origTarget).children().find(":first"));
       });
     });
 
