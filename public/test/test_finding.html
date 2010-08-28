@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>QUnit Test Suite</title>
+        <link rel="stylesheet" href="http://github.com/jquery/qunit/raw/master/qunit/qunit.css" type="text/css" media="screen">
+        <script type="text/javascript" src="http://github.com/jquery/qunit/raw/master/qunit/qunit.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../js/main.js"></script>
+        <script type="text/javascript">
+            test('path works', function(){
+                equals(path_node('li:nth(4)'),'ul:nth(1)>li:nth(4)');
+                equals(path_node('li:nth(2)'),'ul:nth(1)>li#target.foo');
+                equals(path_node('li.foo:nth(1)'),'ul:nth(1)>li.foo.bar');
+            });
+            test('hash works', function(){
+                equals(hash_node('li:nth(0)'),hash_node('li:nth(3)'))
+                equals(hash_node('li:nth(1)'),hash_node('li:nth(4)'))
+                ok(hash_node('li:nth(0)') !== hash_node('li:nth(1)'))
+                ok(hash_node('li:nth(1)') !== hash_node('li:nth(2)'))
+            });
+            test('simple match', function(){
+                var baton = hash_node('#target'),
+                    res = get_node(baton);
+                equals($('#target')[0], res);
+            });
+            test('path match', function(){
+                var baton = hash_node('li:nth(4)');
+                equals($('li:nth(4)')[0], get_node(baton, path_node('li:nth(4)')));
+                equals($('li:nth(1)')[0], get_node(baton, path_node('li:nth(1)')));
+            });
+        </script>
+    </head>
+    <body>
+        <!-- test junk -->
+        <ul style="display:none"></ul>
+        <ul style="display:none">
+            <li class="foo">abc</li>
+            <li class="foo bar">def</li>
+            <li class="foo" id="target">ghi</li>
+            <li>abc</li>
+            <li>def</li>
+        </ul>
+        <!-- Qunit stuff -->
+        <h1 id="qunit-header">QUnit Test Suite</h1>
+        <h2 id="qunit-banner"></h2>
+        <div id="qunit-testrunner-toolbar"></div>
+        <h2 id="qunit-userAgent"></h2>
+        <ol id="qunit-tests"></ol>
+    </body>
+</html>
