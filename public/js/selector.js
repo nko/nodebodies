@@ -85,7 +85,7 @@
             y: bounds.y
           }
         };
-        annotations.push(citation);
+        session.notes.push(citation);
         var pin = $('<div class="pin" />');
         pin.css({
             background: 'green',
@@ -100,8 +100,23 @@
         origTarget.append(pin);
         
         // save off our state
-        
-   
+        $.ajax({
+          // TODO: this needs to be the url where the bmklt came from
+          url: "http://localhost:8080/citation/",
+          type: "post",
+          contentType: "application/json",
+          dataType: "json",
+          data: JSON.stringify(session),
+          success : function() {
+            // saved successfully
+          },
+          error  : function() {
+            throw new Error(arguments);
+          },
+          complete : function() {
+
+          }
+        });
       });
     });
 
