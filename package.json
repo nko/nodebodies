@@ -34,8 +34,8 @@
    "dependencies": {
     "connect" : ">= 0.2.4",
     "socket.io" : ">= 0.5.3",
-    "mongoose" : ">= 0.0.1",
-    "mongodb" : ">= 0.7.9"
+    "mongodb" : ">= 0.7.9",
+    "leaf": ">= 0.0.2"
    },
    "directories": {
        "lib": "src/lib",
