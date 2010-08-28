@@ -1,4 +1,5 @@
-LD=`stat -t lib`
+#! /bin/bash
+OLD=`stat -t lib`
 echo $OLD
 while true
 do
@@ -7,9 +8,10 @@ then
   echo "Going down..."
   killall -9 node
   echo "Restarting.."
-  node ./lib/server.js 8080  2>&1 &
-  OLD=$NEW
+  node ./server.js 8080  2>&1 &
 fi
+sleep 5s
+OLD=$NEW
 NEW=`stat -t lib`
 done
 
