@@ -1,11 +1,46 @@
-.selection {
-  border: 1px solid #F0F;
+#sN_menu {
   position: absolute;
+  top: 30px;
+  left: 0;
+  width: 40px;
+  overflow: hidden;
+  background: #333;
+  color: #aaa;
+  list-style-type: none;
+  padding: 0;
 }
 
-.annotation { 
-  border: 1px solid green;
+.sN_button {
+  width: 24px;
+  height: 24px;
+  background: #666;
+  color: #aaa;
+  margin: 0 5px 3px 5px ;
+  cursor: pointer;
+  padding: 3px;
+}
+
+.sN_button:first-child {
+  margin-top: 3px;
+}
+
+.sN_button:hover {
+  color: #fff;
+}
+
+#sN_sidebar_wrap {
   position: absolute;
-  width:300;
-  height: 200;
+  top: 0;
+  right: 0;
+  width: 40px;
+}
+
+#sN_side_count {
+  position: relative;
+  top: 30px;
+  background: #333;
+  color: #aaa;
+  list-style-type: none;
+  padding: 5px;
+  font-size: 3em;
 }

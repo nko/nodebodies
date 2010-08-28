@@ -1,7 +1,11 @@
 (function($){
     var exports = window, //XXX for testing
         AH = 'annoHash',
-        LUT = {};
+        LUT = {},
+        annotations = [];
+
+    ///////
+    /// NODE IDENTIFICATION & MATCHING
 
     exports.hash_node = function hash_node(x) {
         var ret = $.data(x, AH), html, i, ii, ix;
@@ -69,7 +73,27 @@
         return path.join('>');
     }
 
+    function template_page(){
+        $('<ul id="sN_menu">\
+              <li class="sN_button" id="sN_add"><span>Add</span></li>\
+              <li class="sN_button" id="sN_toggle"><span>Toggle</span></li>\
+              <li class="sN_button" id="sN_present"><span>Present</span></li>\
+              <li class="sN_button" id="sN_share"><span>Share</span></li>\
+              <li class="sN_button" id="sN_clear"><span>Clear All</span></li>\
+          </ul>\
+          <div id="sN_sidebar_wrap">\
+              <div id="sN_side_count">0</div>\
+              <ul id="sN_sidebar"></ul>\
+          </div>').appendTo(document.body);
+    }
+
+    ///////
+    /// PAGE INIT
+
     $(function(){
+        template_page();
+
+        //hash everything, we're going to be using it.
         $('*').each(function(i, el) { //XXX problematic on large docs?
             var hash = hash_node(el);
             if (LUT[hash]) {
@@ -80,7 +104,7 @@
             }
             $.data(el, AH, hash_node(el));
         });
+
         window.$ = $; //XXX for testing
     });
-
 })(jQuery.noConflict());
