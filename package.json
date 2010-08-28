@@ -1,14 +1,29 @@
-me": "mypackage",
+{
+   "name": "citations",
    "version": "0.0.1",
    "description": "",
    "keywords": [
    ],
    "maintainers": [
        {
-           "name": "Elijah Insua",
-           "email": "tmpvar@gmail.com",
-           "web": "http://tmpvar.com" 
-       } 
+         "name": "Elijah Insua",
+         "email": "tmpvar@gmail.com",
+         "web": "http://tmpvar.com" 
+       },
+       {
+         "name"  : "Karl Guertin",
+         "email" : "grayrest@gr.ayre.st",
+         "web"   : "http://gr.ayre.st"
+       },
+       {
+         "name"  : "Michael Ciarlo",
+         "email" : "mcpepsi957@gmail.com",
+         "web"   : "http://www.mciarlo.com/"
+       },
+       {
+         "name"  : "Wilson Collado",
+         "email" : "mcpepsi957@gmail.com"
+       }     
    ],
    "repositories": [
        {
@@ -17,10 +32,10 @@ me": "mypackage",
        } 
    ],
    "dependencies": {
-    "connect",
-    "socket.io",
-    "mongoose",
-    "mongodb"
+    "connect" : ">= 0.2.4",
+    "socket.io" : ">= 0.5.3",
+    "mongoose" : ">= 0.0.1",
+    "mongodb" : ">= 0.7.9"
    },
    "directories": {
        "lib": "src/lib",
