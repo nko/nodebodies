@@ -71,10 +71,8 @@
 
         // add this citation to the list
         var citation = {
-          node : {
-            path : path_node(origTarget),
-            hash : hash_node(origTarget)
-          },
+          path : path_node(origTarget),
+          hash : hash_node(origTarget),
           text : $("textarea", annotate).val(),
           anchor : {
             x: anchor.x,
