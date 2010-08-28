@@ -72,6 +72,10 @@
     //path.push(path.shift());
     return path.join('>');
   }
+  ///////
+  /// EVENT HANDLING
+
+  $('#sN_toggle').live('click', function(){$(document.body).toggleClass('pins_hidden');})
 
   ///////
   /// PAGE INIT
