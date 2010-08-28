@@ -4,15 +4,16 @@
         LUT = {};
 
     exports.hash_node = function hash_node(x) {
-        var ret = $.data(x, AH), html, max, i, ii, ix;
+        var ret = $.data(x, AH), html, i, ii, ix;
         if (ret) {  return ret; }
         html = $(x).html().replace(/\W/g,'');
-        max = 0 - (-1 >>> 1);
-        ret += parseInt(html.substr(0,10), 36);
-        ret += parseInt(html.substr(Math.max(html.length - 11, 0)), 36);
-        for (var i = 0, ii = html.length, ix = (~~(html.length / 10) || 1); i < ii; i += ix) {
-            ret += parseInt(html[i], 36);
+        ret = 0 - (-1 >>> 1);
+        ret += parseInt(html.substr(0,10), 36) || 0;
+        ret += parseInt(html.substr(Math.max(html.length - 11, 0)), 36) || 0;
+        for (i = 0, ii = html.length, ix = (~~(html.length / 10) || 1); i < ii; i += ix) {
+            ret += parseInt(html[i], 36) || 0;
         }
+        ret += html.length;
         return ret;
     }
 
@@ -61,10 +62,10 @@
 
             nth = $(el).prevAll(str).length;
             if (nth > 0 ) { str += ':nth('+ nth +')'; }
-            path.unshift(str);
+            path.push(str);
         });
         //the .andSelf() puts the self on the wrong end
-        path.push(path.shift());
+        //path.push(path.shift());
         return path.join('>');
     }
 
