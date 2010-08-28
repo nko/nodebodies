@@ -73,15 +73,13 @@
             hash : hash_node(origTarget)
           },
           text : $("textarea", annotate).val(),
+          anchor : {
+            x: anchor.x,
+            y: anchor.y
+          },
           bounds : {
-            anchor : {
-              x: anchor.x,
-              y: anchor.y
-            },
-            bounds : {
-              x: bounds.x,
-              y: bounds.y
-            }
+            x: bounds.x,
+            y: bounds.y
           }
         };
         annotations.push(citation);
