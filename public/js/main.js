@@ -107,4 +107,31 @@
 
         window.$ = $; //XXX for testing
     });
+
+    // Setup CORS for all ajax requests
+    // taken from: http://github.com/coolaj86/jquery-cors/blob/master/jquery.cors.js#L10
+    $.ajaxSetup({
+      xhr: (function(){
+        var xhr = ( window.XMLHttpRequest && new window.XMLHttpRequest )
+                    || ( window.XDomainRequest && new window.XDomainRequest )
+                    || ( window.ActiveXObject && new window.ActiveXObject )
+                    || {}, 
+        xhr2_capable = false;
+
+        try {
+          xhr2_capable = (xhr.withCredentials !== undefined);
+        } catch (ignore) {
+          xhr2_capable = true;
+        }   
+        try {
+          xhr2_capable = (xhr.responseBody !== undefined);
+        } catch (ignore) {
+          xhr2_capable = true;
+        }   
+        if (xhr2_capable) {
+          xhr = new jQuery.proxy_xmlhttp;
+        }   
+        return xhr;
+      }())
+    });
 })(jQuery.noConflict());

@@ -1,5 +1,8 @@
 (function($) {
-  var annotations = [];
+  var session = {
+    url   : window.location + "",
+    notes : []
+  };
 
   function theInterceptor(ev) {
     ev.preventDefault();
@@ -95,12 +98,14 @@
         });
         origTarget.css('position', origTarget.css('position').replace('static','relative'));
         origTarget.append(pin);
-        console.dir(annotations);
+        
+        // save off our state
+        
+   
       });
     });
 
     // create a new selection box
-    console.log(ev.pageX, ev.pageY);
     ev.preventDefault();
     return false;
   });
