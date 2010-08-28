@@ -8,7 +8,7 @@
         var done  = false;
         
         script.src=url;
-        script.text="jQuery.noConflict( true );";
+        script.text='jQuery.noConflict( true );';
         script.onload=script.onreadystatechange = function(){
             if ( !done && (!this.readyState || this.readyState==='loaded' || this.readyState==='complete') ){
                 done=true;
@@ -31,7 +31,7 @@
         }
     }
     
-    var existingScripts = document.getElementsByTagName("script");
+    var existingScripts = document.getElementsByTagName('script');
     
     while(existingScripts.length)
     {
