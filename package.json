@@ -19,7 +19,8 @@ me": "mypackage",
    "dependencies": {
     "connect",
     "socket.io",
-    "mongoose"
+    "mongoose",
+    "mongodb"
    },
    "directories": {
        "lib": "src/lib",
