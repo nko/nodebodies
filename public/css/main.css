@@ -10,7 +10,7 @@
   padding: 0;
 }
 
-.sN_button {
+#sN_menu .sN_button {
   width: 24px;
   height: 24px;
   background: #666;
@@ -20,11 +20,11 @@
   padding: 3px;
 }
 
-.sN_button:first-child {
+#sN_menu .sN_button:first-child {
   margin-top: 3px;
 }
 
-.sN_button:hover {
+#sN_menu .sN_button:hover {
   color: #fff;
 }
 
@@ -45,6 +45,123 @@
   font-size: 3em;
 }
 
-body.pins_hidden .pin {
+body.pins_hidden .sN_pin_cushion {
   display: none !important;
+}
+body > .sN_pin_cushion {
+  position: absolute;
+}
+.sN_pin {
+  height: 17px;
+  width: 17px;
+  position: absolute;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0, rgb(212,71,0)),
+    color-stop(1, rgb(194,0,0))
+  );
+  background: -moz-linear-gradient(
+    center top,
+    rgb(212,71,0) 0%,
+    rgb(194,0,0) 100%
+  );
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  z-index: 9998;
+  cursor: pointer;
+  -moz-box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 1px 2px 0px #555;
+  /*border: 2px solid #e4e4e4;*/
+  margin: 0;
+  padding: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+.sN_pin span {
+  font-size: 11px;
+  height: 11px;
+  width: 17px;
+  vertical-align: center;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  float: left;
+  margin: 0 0 0 0;
+  padding: 3px 0;
+  line-height: 1;
+  font-family: "Helvetica","Arial", sans-serif;
+}
+
+.sN_annotation {
+  -webkit-border-radius: 5px 0 5px 5px;
+  -moz-border-radius: 5px 0 5px 5px;
+  border-radius: 5px 0 5px 5px;
+  font-family: sans-serif;
+  font-size: 12px;
+  color: #CCCCCC;
+  width: 18em;
+  margin: -10px 25px;
+  padding: 10px;
+  background-color: rgba(0,0,0,0.65);
+}
+
+.sN_annotation > textarea {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid #999999;
+  color: #CCCCCC;
+  font-family: sans-serif;
+  width:100%;
+}
+.sN_actions {
+  -webkit-border-radius: 0 3px 3px 0;
+  -moz-border-radius:  0 3px 3px 0;
+  border-radius:  0 3px 3px 0;
+  background-color: inherit;
+  padding: 5px 9px 5px 0;
+  position: absolute;
+  right: 10px;
+  top: -10px;
+  width: 6px;
+}
+.sN_pin_cushion .sN_button {
+    padding: 3px 12px 4px 12px;
+    color: white;
+    font-weight: bold;
+    font-size: 11px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border:none;
+    width: 96px;
+    text-align: center;
+    background: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0, rgb(43,135,184)),
+      color-stop(1, rgb(0,111,166))
+    );
+    background: -moz-linear-gradient(
+        center top,
+        rgb(43,135,184) 0%,
+        rgb(0,111,166) 100%
+    );
+    border-top: 1px solid #60a5cb;
+}
+
+.sN_hidden {
+  display: none !important;
+}
+.sN_save_wrap {
+  padding-top: 5px;
+  text-align: center;
+}
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
 }

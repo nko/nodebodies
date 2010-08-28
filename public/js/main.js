@@ -75,13 +75,91 @@
   ///////
   /// EVENT HANDLING
 
+  function place_pin(id, target, pageX, pageY) {
+    target = $(target);
+    var offset = target.offset(),
+        pos    = target.position(),
+        anchor = { x: pageX - offset.left, y: pageY - offset.top },
+        bounds = $.extend({}, anchor);
+  }
+
+  function do_add(e){
+    var cushion = template_pin(document.body),
+        id = annotations.length;
+
+    cushion.find('.sN_pin>span').text(id + 1);
+    cushion.attr('id','sN_'+id);
+
+    function pin_move(e){ cushion.css({ top: e.pageY - 8, left: e.pageX - 8 }); }
+
+    $(window).mousemove(pin_move);
+    cushion.one('click', function(e){
+      $(window).unbind("mousemove", pin_move);
+
+      //get the element underneath the pin
+      cushion.toggleClass('sN_hidden');
+      var target = document.elementFromPoint(e.pageX, e.pageY);
+      cushion.toggleClass('sN_hidden');
+
+      cushion.data('placed', true);
+      cushion.find('.sN_pin').css('cursor','move');
+
+      //place pin
+      place_pin(cushion.attr('id'), target, e.pageX, e.pageY);
+    });
+  }
+
+  $('.sN_pin').live('mouseup', function(e){
+      var cushion = $(e.target).parents('.sN_pin_cushion');
+      cushion.find('.sN_annotation').removeClass('sN_hidden');
+      cushion.find('textarea').focus().autogrow();
+  });
+  $('.sN_pin').live('mousedown', function(e){
+    var cushion = $(e.target).parents('.sN_pin_cushion');
+    if (!cushion.data('placed')) {return;}
+    function pin_move(e){ cushion.css({ top: e.pageY - 8, left: e.pageX - 8 }); }
+    $(window).mousemove(pin_move);
+    $(window).one("mouseup", function (e) {
+      $(window).unbind("mousemove", pin_move);
+
+      //get the element underneath the pin
+      cushion.toggleClass('sN_hidden');
+      var target = document.elementFromPoint(e.pageX, e.pageY);
+      cushion.toggleClass('sN_hidden');
+
+      //place pin
+      place_pin(cushion.attr('id'), target, e.pageX, e.pageY);
+    });
+  });
+  $('.sN_annotation>textarea').live('blur', function(e){
+    $(e.target).parent('.sN_annotation').addClass('sN_hidden');
+  });
+
+  $('#sN_add').live('click', do_add);
   $('#sN_toggle').live('click', function(){$(document.body).toggleClass('pins_hidden');})
 
   ///////
   /// PAGE INIT
 
+  function template_pin(into){
+    var pin = $('\
+       <div class="sN_pin_cushion clickable">\
+         <div class="sN_pin"><span></span></div>\
+         <div class="sN_annotation sN_hidden">\
+            <div class="sN_actions">\
+              <div class="sN_delete_annotation">X</div>\
+            </div>\
+            <textarea></textarea>\
+       </div>');
+//            <div class="sN_save_wrap clearfix">\
+//              <button class="sN_button sN_save_annotation">Save</button>\
+//            </div>\
+    return into ? pin.appendTo(into) : pin;
+  }
+
   function template_page(){
-    $('<ul id="sN_menu">\
+    return $('\
+       <ul id="sN_menu">\
         <li class="sN_button" id="sN_add"><span>Add</span></li>\
         <li class="sN_button" id="sN_toggle"><span>Toggle</span></li>\
         <li class="sN_button" id="sN_present"><span>Present</span></li>\
@@ -119,7 +197,7 @@
       var xhr = ( window.XMLHttpRequest && new window.XMLHttpRequest )
              || ( window.XDomainRequest && new window.XDomainRequest )
              || ( window.ActiveXObject && new window.ActiveXObject )
-             || {}, 
+             || {},
           xhr2_capable = false;
 
       try {
@@ -139,4 +217,50 @@
     }())
   });
 })(jQuery.noConflict());
+
+(function($) {
+/*
+* Auto-growing textareas; technique ripped from Facebook
+* Code from http://javascriptly.com/examples/jquery-grab-bag/autogrow-textarea.html
+*/
+  $.fn.autogrow = function(options) {
+
+    this.filter('textarea').each(function() {
+
+      var $this       = $(this),
+      minHeight   = $this.height(),
+      lineHeight  = $this.css('lineHeight');
+
+      var shadow = $('<div></div>').css({
+        position:   'absolute',
+        top:        -10000,
+        left:       -10000,
+        width:      $(this).width(),
+        fontSize:   $this.css('fontSize'),
+        fontFamily: $this.css('fontFamily'),
+        lineHeight: $this.css('lineHeight'),
+        resize:     'none'
+      }).appendTo(document.body);
+
+      var update = function() {
+
+        var val = this.value.replace(/</g, '&lt;')
+                            .replace(/>/g, '&gt;')
+                            .replace(/&/g, '&amp;')
+                            .replace(/\n/g, '<br/>');
+
+        shadow.html(val);
+        $(this).css('height', Math.max(shadow.height() + 20, minHeight));
+      }
+
+      $(this).change(update).keyup(update).keydown(update);
+
+      update.apply(this);
+
+    });
+
+    return this;
+  }
+
+})(jQuery);
 // vim: set ft=javascript ff=unix et sw=2 ts=4 :
