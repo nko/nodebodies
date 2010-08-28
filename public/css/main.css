@@ -1,0 +1,11 @@
+.selection {
+  border: 1px solid #F0F;
+  position: absolute;
+}
+
+.annotation { 
+  border: 1px solid green;
+  position: absolute;
+  width:300;
+  height: 200;
+}
