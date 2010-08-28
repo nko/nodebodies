@@ -71,10 +71,8 @@
 
         // add this citation to the list
         var citation = {
-          node : {
-            path : path_node(origTarget),
-            hash : hash_node(origTarget)
-          },
+          path : path_node(origTarget),
+          hash : hash_node(origTarget),
           text : $("textarea", annotate).val(),
           anchor : {
             x: anchor.x,
@@ -85,7 +83,7 @@
             y: bounds.y
           }
         };
-        annotations.push(citation);
+        session.notes.push(citation);
         var pin = $('<div class="pin" />');
         pin.css({
             background: 'green',
@@ -100,8 +98,23 @@
         origTarget.append(pin);
         
         // save off our state
-        
-   
+        $.ajax({
+          // TODO: this needs to be the url where the bmklt came from
+          url: "http://localhost:8080/citation/",
+          type: "post",
+          contentType: "application/json",
+          dataType: "json",
+          data: JSON.stringify(session),
+          success : function() {
+            // saved successfully
+          },
+          error  : function() {
+            throw new Error(arguments);
+          },
+          complete : function() {
+
+          }
+        });
       });
     });
 
