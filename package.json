@@ -1,0 +1,27 @@
+me": "mypackage",
+   "version": "0.0.1",
+   "description": "",
+   "keywords": [
+   ],
+   "maintainers": [
+       {
+           "name": "Elijah Insua",
+           "email": "tmpvar@gmail.com",
+           "web": "http://tmpvar.com" 
+       } 
+   ],
+   "repositories": [
+       {
+           "type": "git",
+           "url": "git@github.com:nko/nodebodies.git" 
+       } 
+   ],
+   "dependencies": {
+    "connect",
+    "socket.io",
+    "mongoose"
+   },
+   "directories": {
+       "lib": "src/lib",
+   } 
+}
