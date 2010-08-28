@@ -15,15 +15,17 @@
     if ($(ev.target).parents().andSelf().hasClass("clickable")) {
       return;
     }
-    var anchor = { x: ev.clientX, y: ev.clientY },
-        bounds = { x: ev.clientX, y: ev.clientY },
-        origTarget = ev.target,
-      
+    var origTarget = $(ev.target),
+        offset = origTarget.offset(),
+        pos    = origTarget.position(),
+        anchor = { x: ev.pageX - offset.left, y: ev.pageY - offset.top },
+        bounds = $.extend({}, anchor),
+
         // TODO: please god no!
         sel     = $('<canvas class="clickable selection"></canvas>'),
         annotate = $('<div class="clickable annotation"><textarea></textarea></div>');
-        
-    $("body").append(sel);
+
+    origTarget.append(sel);
     sel.css({
       border: "1px solid #F0F",
       position: "absolute",
@@ -31,36 +33,39 @@
       top : anchor.y,
       height: 0,
       widht: 0
-    });    
-  
+    });
+
     function onMove(moveEvent) {
+        var width = moveEvent.pageX - offset.left - anchor.x,
+            height = moveEvent.pageY - offset.top - anchor.y;
       sel.css({
-        width: moveEvent.clientX - anchor.x,
-        height: moveEvent.clientY - anchor.y
+        width: width,
+        height: height
       });
-      bounds = { x: moveEvent.clientX, y: moveEvent.clientY };
+      bounds = { x: anchor.x + width, y: anchor.y + height };
     }
+
     $(window).mousemove(onMove);
     $(window).one("mouseup", function onUp(ev) {
       $(window).unbind("mousemove", onMove);
       annotate.css({
         border: "1px solid green",
         position: "absolute",
-        left: bounds.x,
-        top: anchor.y
+        left: offset.left + anchor.x,
+        top: offset.top + anchor.y
       });
 
-      $("body").append(annotate); 
+      origTarget.append(annotate);
 
       $(window).click(function removeFocus(ev) {
         if ($(ev.target).parents().andSelf().hasClass("clickable")) {
           return;
-        } 
+        }
         // re-bind the document.mousedown so we can handle another annotation!
         $(document).mousedown(onDown);
         $(".clickable").remove();
         $(window).unbind("click", removeFocus);
-        
+
         // add this citation to the list
         var citation = {
           node : {
@@ -80,14 +85,24 @@
           }
         };
         annotations.push(citation);
+        var pin = $('<div class="pin" />');
+        pin.css({
+            background: 'green',
+            border: '1px solid green',
+            width: '10px',
+            height: '10px',
+            position: 'absolute',
+            top: anchor.y,
+            left: anchor.x
+        });
+        origTarget.css('position', origTarget.css('position').replace('static','relative'));
+        origTarget.append(pin);
         console.dir(annotations);
-        var pin = $('<div style="background:green; border:1px solid green; width:10px; height:10px" class="pin"></div>');
-        pin.insertBefore($(origTarget).children().find(":first"));
       });
     });
 
-    // create a new selection box    
-    console.log(ev.clientX, ev.clientY); 
+    // create a new selection box
+    console.log(ev.pageX, ev.pageY);
     ev.preventDefault();
     return false;
   });

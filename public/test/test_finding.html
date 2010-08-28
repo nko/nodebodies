@@ -13,10 +13,13 @@
                 equals(path_node('li.foo:nth(1)'),'ul:nth(1)>li.foo.bar');
             });
             test('hash works', function(){
-                equals(hash_node('li:nth(0)'),hash_node('li:nth(3)'))
-                equals(hash_node('li:nth(1)'),hash_node('li:nth(4)'))
-                ok(hash_node('li:nth(0)') !== hash_node('li:nth(1)'))
-                ok(hash_node('li:nth(1)') !== hash_node('li:nth(2)'))
+                function isNaN(x){return x !== x}
+                equals(hash_node('li:nth(0)'),hash_node('li:nth(3)'), 'same values hash the same');
+                equals(hash_node('li:nth(1)'),hash_node('li:nth(4)'), 'same values hash the same');
+                ok(hash_node('li:nth(0)') !== hash_node('li:nth(1)'), 'different values hash differently');
+                ok(hash_node('li:nth(1)') !== hash_node('li:nth(2)'), 'different values hash differently');
+                ok(!isNaN(hash_node('<b></b>')), 'Empty string does not hash to NaN');
+                ok(hash_node('<b>zzzzzzzz</b>') !== hash_node('<b>zzzzzzzzzzzzzzzzzzzz</b>'), 'runs of strings');
             });
             test('simple match', function(){
                 var baton = hash_node('#target'),
