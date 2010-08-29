@@ -148,6 +148,44 @@
     $(document.body).trigger('place.pin',[citation]);
   }
 
+  function pin_animation(target, adding, doneFn) {
+    
+    var canvas = $("<canvas height='40' width='40' style='position:absolute;z-index:900000'></canvas>"),
+        ctx    = canvas[0].getContext('2d'),
+        tick   = adding ? 0 : 10,
+        cx     = 20,
+        cy     = 20,
+        cw     = 40,
+        ch     = 40,
+        dir    = adding ? 1 : -1,
+        timer  = null;
+
+    $(canvas).css({
+      left: target.x-20,
+      top: target.y-20
+    });
+
+    $(document.body).append(canvas);
+    timer = setInterval(function() {
+      ctx.clearRect(0,0,cw,ch);
+      var opacity = 255 - tick*25;
+      ctx.strokeStyle = "rgba(212, 71, 0," + opacity/255 + ")";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, tick*2, 0, Math.PI*2, true);
+      ctx.closePath();
+      ctx.stroke();
+      tick += dir;
+      if (tick > 10 || tick < 0) {
+        clearInterval(timer);
+        canvas.remove();
+        if ($.isFunction(doneFn)) {
+          doneFn();
+        }
+      } 
+    }, 20);
+  }
+
   function place_pin(id, target, pageX, pageY) {
     target = $(target);
     if(typeof id == 'string'){ id = ~~(id.substr(3)); }
@@ -157,6 +195,8 @@
         anchor = { x: pageX - offset.left, y: pageY - offset.top },
         bounds = $.extend({}, anchor),
         citation;
+    
+    pin_animation(anchor, true);
     //console.log(id, cushion, target);
     citation = {
       path : path_node(target),
