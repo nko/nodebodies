@@ -344,12 +344,11 @@
     $('#sN_side_count').removeClass('sN_side_closer');
   });
 
-  $(".sN_pin_cushion .sN_delete_annotation").live('click', function(e){
+  $(".sN_pin_cushion .sN_delete_annotation").live('mousedown', function(e){
     var target = $(e.target),
-        id = ~~(target.attr('id').substr(3)),
+        id = ~~(target.parents('.sN_pin_cushion').attr('id').substr(3)),
         citation = annotations[id],
         cur;
-
     //renumber everything after
     for (var i = id, ii = annotations.length; i < ii; i++) {
       cur = annotations[i];
