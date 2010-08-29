@@ -143,7 +143,12 @@
   }
 
   function create_pin(citation, target) {
-    citation.cushion.css({top: citation.anchor.y - 8, left: citation.anchor.x - 8, position: 'absolute'}).prependTo(target);
+    citation.cushion.css({
+      top: citation.anchor.y - 8,
+      left: citation.anchor.x - 8,
+      position: 'absolute'
+    }).prependTo(target);
+
     target.css('position', target.css('position').replace('static','relative'));
     $(document.body).trigger('place.pin',[citation]);
   }
@@ -234,7 +239,6 @@
       $(window).unbind("mousemove", pin_move);
 
       //get the element underneath the pin
-      cushion.toggleClass('sN_hidden');
       $(document.documentElement).toggleClass('sN_all_hidden');
       var target = document.elementFromPoint(e.pageX, e.pageY);
       $(document.documentElement).toggleClass('sN_all_hidden');
