@@ -1,8 +1,11 @@
-(function($){
+
+if (!document.getElementById('.sN_menu')){(function($){
   var exports = window, //XXX for testing
       AH = 'annoHash',
       LUT = {},
       annotations = [];
+
+  exports.annotations = annotations; //XXX for testing
 
   ///////
   /// NODE IDENTIFICATION & MATCHING
@@ -19,9 +22,9 @@
     }
     ret += html.length;
     return ret;
-  }
+  };
 
-  function matches_path(pathstr) {
+  function matches_path(n, pathstr) {
     var res;
     res = $(pathstr).filter(function(){ return $.data(this, AH) == n; });
     if (res[0]) {
@@ -40,18 +43,18 @@
         return $(pathstr)[0];
       }
       path = pathstr.split('>');
-      working = pathstr
+      working = pathstr;
       while(path.length > 0) {
-        res = matches_path(working);
+        res = matches_path(n, working);
         if (res[0]) { return res[0]; }
-        res = matches_path(working.substr(0, working.indexOf(/:nth\(\d+\)$/)));
+        res = matches_path(n, working.substr(0, working.indexOf(/:nth\(\d+\)$/)));
         if (res[0]) { return res[0]; }
         path.pop();
         working = path.join('>');
       }
-      return $(pathstr)[0] || $LUT[n][0]; //XXX not sure about this
+      return $(pathstr)[0] || LUT[n][0]; //XXX not sure about this
     }
-  }
+  };
 
   exports.path_node = function path_node(x) {
     var path = [];
@@ -71,24 +74,46 @@
     //the .andSelf() puts the self on the wrong end
     //path.push(path.shift());
     return path.join('>');
-  }
+  };
+
   ///////
   /// EVENT HANDLING
 
   function place_pin(id, target, pageX, pageY) {
     target = $(target);
-    var offset = target.offset(),
-        pos    = target.position(),
+    if(typeof id == 'string'){ id = ~~(id.substr(3)); }
+    var cushion = $('#sN_'+id),
+        offset = target.offset(),
         anchor = { x: pageX - offset.left, y: pageY - offset.top },
-        bounds = $.extend({}, anchor);
+        bounds = $.extend({}, anchor),
+        citation;
+    //console.log(id, cushion, target);
+    cushion.css({top: anchor.y - 8, left: anchor.x - 8, position: 'absolute'}).appendTo(target);
+    target.css('position', target.css('position').replace('static','relative'));
+    citation = {
+      path : path_node(target),
+      hash : hash_node(target),
+      text : $("textarea", target.parent('.sN_pin_cushion')).val(),
+      anchor : {
+        x: anchor.x,
+        y: anchor.y
+      },
+      bounds : {
+        x: bounds.x,
+        y: bounds.y
+      },
+      target : target
+    };
+    annotations[id] = citation;
+    $(document.body).trigger('pinplace',[citation]);
   }
 
   function do_add(e){
     var cushion = template_pin(document.body),
         id = annotations.length;
 
-    cushion.find('.sN_pin>span').text(id + 1);
-    cushion.attr('id','sN_'+id);
+    cushion.attr('id','sN_'+id)
+           .find('.sN_pin>span').text(id + 1);
 
     function pin_move(e){ cushion.css({ top: e.pageY - 8, left: e.pageX - 8 }); }
 
@@ -109,34 +134,67 @@
     });
   }
 
+  // pin click -> edit text
   $('.sN_pin').live('mouseup', function(e){
       var cushion = $(e.target).parents('.sN_pin_cushion');
       cushion.find('.sN_annotation').removeClass('sN_hidden');
-      cushion.find('textarea').focus().autogrow();
+      cushion.find('textarea').autogrow();
+      setTimeout(function(){cushion.find('textarea').focus();}, 0); //if we don't timeout it, this screws up when we reparent the cushion
   });
+
+  // Drag & Drop pin
   $('.sN_pin').live('mousedown', function(e){
-    var cushion = $(e.target).parents('.sN_pin_cushion');
+    var cushion = $(e.target).parents('.sN_pin_cushion')
+        loc = {x: e.pageX, y: e.pageY},
+        moved = false;
     if (!cushion.data('placed')) {return;}
-    function pin_move(e){ cushion.css({ top: e.pageY - 8, left: e.pageX - 8 }); }
+    function pin_move(e){
+      if (Math.max(loc.x - e.pageX, loc.y - e.pageY) > 10){
+        moved = true;
+        cushion.css({ top: e.pageY - 8, left: e.pageX - 8 });
+      }
+    }
     $(window).mousemove(pin_move);
     $(window).one("mouseup", function (e) {
       $(window).unbind("mousemove", pin_move);
 
-      //get the element underneath the pin
-      cushion.toggleClass('sN_hidden');
-      var target = document.elementFromPoint(e.pageX, e.pageY);
-      cushion.toggleClass('sN_hidden');
+      if(moved) {
+        //get the element underneath the pin
+        cushion.toggleClass('sN_hidden');
+        var target = document.elementFromPoint(e.pageX, e.pageY);
+        cushion.toggleClass('sN_hidden');
 
-      //place pin
-      place_pin(cushion.attr('id'), target, e.pageX, e.pageY);
+        //place pin
+        place_pin(cushion.attr('id'), target, e.pageX, e.pageY);
+      }
     });
   });
   $('.sN_annotation>textarea').live('blur', function(e){
+    console.log('blur')
     $(e.target).parent('.sN_annotation').addClass('sN_hidden');
   });
 
+  function halt(e){
+    console.log('halt');
+    e.stopPropagation();
+    e.preventDefault();
+    return false;
+  }
+
+  //$(window).mouseup(function(e) {
+  //  e.preventDefault();
+  //  return false;
+  //});
+  $(".sN_pin_cushion, .sN_menu, .sN_sidebar_wrap").live('click', halt);
+
+  $(document.body).bind('pinplace', function(e, citation){
+    console.log('place');
+    $('#sN_side_count').text(annotations.length);
+  });
+
   $('#sN_add').live('click', do_add);
-  $('#sN_toggle').live('click', function(){$(document.body).toggleClass('pins_hidden');})
+  $('#sN_toggle').live('click', function(){$(document.body).toggleClass('pins_hidden');});
+  $('#sN_clear').live('click', function(){});
 
   ///////
   /// PAGE INIT
@@ -173,6 +231,7 @@
   }
 
   $(function(){
+    $('head').append('<link rel="stylesheet" href="http://localhost:8080/css/main.css" type="text/css" />');
     template_page();
 
     //hash everything, we're going to be using it.
@@ -201,8 +260,7 @@
     this.filter('textarea').each(function() {
 
       var $this       = $(this),
-      minHeight   = $this.height(),
-      lineHeight  = $this.css('lineHeight');
+          minHeight   = $this.height();
 
       var shadow = $('<div></div>').css({
         position:   'absolute',
@@ -224,7 +282,7 @@
 
         shadow.html(val);
         $(this).css('height', Math.max(shadow.height() + 20, minHeight));
-      }
+      };
 
       $(this).change(update).keyup(update).keydown(update);
 
@@ -233,7 +291,7 @@
     });
 
     return this;
-  }
+  };
 
-})(jQuery);
+})(jQuery);}
 // vim: set ft=javascript ff=unix et sw=2 ts=4 :
