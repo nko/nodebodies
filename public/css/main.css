@@ -93,8 +93,9 @@
   display: none !important;
 }
 
-body > .sN_pin_cushion {
+.sN_pin_cushion {
   position: absolute;
+  z-index: 100;
 }
 .sN_pin {
   height: 17px;

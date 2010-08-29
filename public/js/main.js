@@ -146,14 +146,16 @@ if (!document.getElementById('.sN_menu')){(function($){
 
   // Drag & Drop pin
   $('.sN_pin').live('mousedown', function(e){
-    var cushion = $(e.target).parents('.sN_pin_cushion')
+    var cushion = $(e.target).parents('.sN_pin_cushion'),
         loc = {x: e.pageX, y: e.pageY},
         moved = false;
     if (!cushion.data('placed')) {return;}
     function pin_move(e){
-      if (Math.max(loc.x - e.pageX, loc.y - e.pageY) > 10){
+      var offset;
+      if (moved || Math.max(loc.x - e.pageX, loc.y - e.pageY) > 10){
         moved = true;
-        cushion.css({ top: e.pageY - 8, left: e.pageX - 8 });
+        if (!offset) {offset = cushion.parent().offset()}
+        cushion.css({ top: e.pageY - offset.top - 8, left: e.pageX - offset.left - 8 });
       }
     }
     $(window).mousemove(pin_move);
