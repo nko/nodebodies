@@ -2,6 +2,8 @@
     var loadedCount = 0;
     var scripts  = arguments[0] || [];
     var head = window.document.getElementsByTagName('head')[0];
+    if(window.CITATIONS) return;
+    window.CITATIONS = true;
 
     var getScript=function(url,success){
         var script= window.document.createElement('script');
