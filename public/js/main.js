@@ -119,6 +119,7 @@ if (!document.getElementById('.sN_menu')){(function($){
 
     $(window).mousemove(pin_move);
     cushion.one('click', function(e){
+      console.log('unbind')
       $(window).unbind("mousemove", pin_move);
 
       //get the element underneath the pin
@@ -181,20 +182,28 @@ if (!document.getElementById('.sN_menu')){(function($){
     return false;
   }
 
-  //$(window).mouseup(function(e) {
-  //  e.preventDefault();
-  //  return false;
-  //});
-  $(".sN_pin_cushion, .sN_menu, .sN_sidebar_wrap").live('click', halt);
-
+  function update_sidebar_item(e, citation) {
+    elem = $(elem);
+    elem.find('.sN_num').text(citation.target.attr(id).text().substr(3));
+    elem.find('.sN_text').text(citation.text);
+  }
   function update_side_count(){
     $('#sN_side_count').text(annotations.length);
   }
+
   $(document.body).bind('place.pin', update_side_count);
   $(document.body).bind('clear.pin', update_side_count);
 
+  $(document.body).bind('place.pin', update_sidebar_item);
+
+  $(".sN_pin_cushion, .sN_menu, .sN_sidebar_wrap").live('click', halt);
+
+  //Action button handlers
+  $('#sN_menu>.sN_button:not(#sN_toggle)').live('click',function(){
+    $(document.documentElement).removeClass('pins_hidden');
+  })
   $('#sN_add').live('click', do_add);
-  $('#sN_toggle').live('click', function(){$(document.body).toggleClass('pins_hidden');});
+  $('#sN_toggle').live('click', function(){ if(annotations.length){ $(document.documentElement).toggleClass('pins_hidden'); } });
   $('#sN_clear').live('click', function(){annotations = [];$('.sN_pin_cushion').remove();$(document.body).trigger('clear.pin')});
 
   ///////
@@ -210,10 +219,15 @@ if (!document.getElementById('.sN_menu')){(function($){
             </div>\
             <textarea></textarea>\
        </div>');
-//            <div class="sN_save_wrap clearfix">\
-//              <button class="sN_button sN_save_annotation">Save</button>\
-//            </div>\
     return into ? pin.appendTo(into) : pin;
+  }
+
+  function template_sidebar_item(){
+    return $('\
+      <li>\
+          <div class="sN_num"></div>\
+          <div class="sN_text"></div>\
+      </li>');
   }
 
   function template_page(){
@@ -227,7 +241,7 @@ if (!document.getElementById('.sN_menu')){(function($){
       </ul>\
       <div id="sN_sidebar_wrap">\
         <div id="sN_side_count">0</div>\
-        <ul id="sN_sidebar"></ul>\
+        <ul id="sN_sidebar sN_hidden"></ul>\
       </div>').appendTo(document.body);
   }
 

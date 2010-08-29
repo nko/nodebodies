@@ -1,53 +1,98 @@
 #sN_menu {
-  position: absolute;
-  top: 30px;
+  position: fixed;
+  top: 8px;
   left: 0;
+  float: left;
+  height: 174px;
+  margin: 0;
+  padding-left: 2px;
   width: 40px;
   overflow: hidden;
-  background: #333;
-  color: #aaa;
-  list-style-type: none;
+  background: rgba(245, 245, 245, 0.95);
+  /*background: #f1f1f1;*/
+  border: 1px solid #d1d1d1;
+  border-left: none;
+  font-family: 'Arial', sans-serif;
+  z-index: 9999;
+  display: block;
+  padding-top: 3px;
+  -moz-border-radius: 0 5px 5px 0;
+  -webkit-border-radius: 0 5px 5px 0;
+}
+
+#sN_menu > .sN_button {
+  width: 20px;
+  height: 20px;
+  display: block;
+  text-indent: -9999px;
+  font-size: 0;
+  margin: 7px 10px;
   padding: 0;
-}
-
-#sN_menu .sN_button {
-  width: 24px;
-  height: 24px;
-  background: #666;
-  color: #aaa;
-  margin: 0 5px 3px 5px ;
+  float: left;
+  border: none;
+  background: transparent url('http://localhost:8080/img/actions_sprite.png') no-repeat;
   cursor: pointer;
-  padding: 3px;
+}
+#sN_menu > #sN_button > span {
+  display: none
 }
 
-#sN_menu .sN_button:first-child {
-  margin-top: 3px;
-}
 
-#sN_menu .sN_button:hover {
-  color: #fff;
-}
+#sN_menu > #sN_add       { background-position: -20px 0; }
+#sN_menu > #sN_add:hover { background-position: 0 0; }
+
+#sN_menu > #sN_toggle       { background-position: -20px -20px; }
+#sN_menu > #sN_toggle:hover { background-position: 0 -20px; }
+
+#sN_menu > #sN_present       { background-position: -20px -40px; }
+#sN_menu > #sN_present:hover { background-position: 0 -40px; }
+
+#sN_menu > #sN_share       { background-position: -20px -60px; }
+#sN_menu > #sN_share:hover { background-position: 0 -60px; }
+
+#sN_menu > #sN_clear       { background-position: -20px -80px; }
+#sN_menu > #sN_clear:hover { background-position: 0 -80px; }
+
 
 #sN_sidebar_wrap {
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
   width: 40px;
 }
 
 #sN_side_count {
-  position: relative;
-  top: 30px;
-  background: #333;
-  color: #aaa;
-  list-style-type: none;
-  padding: 5px;
-  font-size: 3em;
+  position: absolute;
+  top: 8px;
+  right: 0px;
+  float: left;
+  width: 28px; 
+  text-align: center;
+  overflow: hidden;
+  color: #fff;
+  background: rgba(245, 245, 245, 0.95);
+  /*background: #f1f1f1;*/
+  border: 1px solid #d1d1d1;
+  border-right: none;
+  font-family: 'Arial', sans-serif;
+  z-index: 9999;
+  display: block;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  -moz-border-radius: 5px 0 0 5px;
+  -webkit-border-radius: 5px;
+  background: rgba(186,34,36, 0.9);
+  border: 1px solid #9c1315;
+  border-right: none;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
 }
 
-body.pins_hidden .sN_pin_cushion {
+.pins_hidden .sN_pin_cushion {
   display: none !important;
 }
+
 body > .sN_pin_cushion {
   position: absolute;
 }
