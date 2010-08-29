@@ -214,6 +214,7 @@
   padding: 10px;
   background: rgba(41, 43, 47, 0.92);
   border: 1px solid #151515;
+  z-index: 9999;
 }
 
 .sN_annotation > textarea {
