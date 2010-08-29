@@ -41,20 +41,19 @@
   			} 
   		});
   		
+  		$.ajax({
+  			url: 'http://sitations.com/count/',
+  			dataType: 'json',
+  			success: function (data)
+  			{
+  				$('span#sitationCount').html(data.count);
+  			} 
+  		});
+  		
   		setTimeout(getLatest, 5000);
 		};
 		
 		getLatest();
-		
-		$.ajax({
-			url: 'http://sitations.com/count/',
-			dataType: 'json',
-			success: function (data)
-			{
-				$('span#sitationCount').html(data.count);
-			} 
-		});
-
 	});
 </script>
 
