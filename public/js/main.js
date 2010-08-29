@@ -111,7 +111,6 @@
   }
   
   $(document.body).bind('text.pin', save_pins);
-  $(document.body).bind('place.pin', save_pins);
 
   exports.load_pins = load_pins;
   function load_pins(arr) {
