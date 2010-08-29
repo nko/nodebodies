@@ -280,7 +280,10 @@ function basic_formatter(text){
           id = cushion.attr('id');
       cushion.find('.sN_annotation').removeClass('sN_hidden');
       cushion.find('textarea').autogrow();
-      setTimeout(function(){$('#'+id).find('textarea').focus();}, 0); //if we don't timeout it, this screws up when we reparent the cushion
+      setTimeout(function(){
+        cushion.find('.sN_hover').addClass('sN_hidden');
+        $('#'+id).find('textarea').focus();
+      }, 0); //if we don't timeout it, this screws up when we reparent the cushion
   });
 
   // Drag & Drop pin
@@ -289,6 +292,7 @@ function basic_formatter(text){
         loc = {x: e.pageX, y: e.pageY},
         moved = false;
     if (!cushion.data('placed')) {return;}
+    cushion.find('.sN_hover').addClass('sN_hidden');
     e.preventDefault();
     function pin_move(e){
       if (moved || Math.max(loc.x - e.pageX, loc.y - e.pageY) > 8){
@@ -302,6 +306,7 @@ function basic_formatter(text){
     $(window).mousemove(pin_move);
     $(window).one("mouseup", function (e) {
       $(window).unbind("mousemove", pin_move);
+      cushion.find('.sN_hover').removeClass('sN_hidden');
 
       if(moved) {
         //get the element underneath the pin
@@ -320,10 +325,15 @@ function basic_formatter(text){
 
     if(!citation) return;
 
-    setTimeout(function(){$(e.target).parent('.sN_annotation').addClass('sN_hidden');},50);
+    setTimeout(function(){$(e.target).parent('.sN_annotation').addClass('sN_hidden');},0);
     citation.text = e.target.value || '';
+    citation.cushion.find('.sN_hover').removeClass('sN_hidden').html(basic_formatter(citation.text));
     $(document.body).trigger('text.pin', [citation]);
   });
+
+  function get_share_link(){
+    return 'http://share.sitations.com/sess-'+exports.sessionId;
+  }
 
   function halt(e){
     //console.log('halted', e);
@@ -523,6 +533,7 @@ function basic_formatter(text){
     var pin = $('\
        <div class="sN_pin_cushion clickable">\
          <div class="sN_pin"><span></span></div>\
+         <div class="sN_hover sN_hidden"></div>\
          <div class="sN_annotation sN_hidden">\
             <div class="sN_actions">\
               <div class="sN_delete_annotation"><span class="sN_delete">delete</span></div>\
