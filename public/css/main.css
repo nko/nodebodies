@@ -216,7 +216,7 @@
   font-family: sans-serif;
   width:100%;
 }
-.sN_actions {
+.sN_delete {
   -webkit-border-radius: 0 3px 3px 0;
   -moz-border-radius:  0 3px 3px 0;
   border-radius:  0 3px 3px 0;
@@ -226,6 +226,9 @@
   right: 10px;
   top: -10px;
   width: 6px;
+}
+.sN_delete_annotation {
+  cursor: pointer;
 }
 .sN_pin_cushion .sN_button {
     padding: 3px 12px 4px 12px;
