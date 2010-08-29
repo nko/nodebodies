@@ -234,7 +234,7 @@ if (!document.getElementById('.sN_menu')){(function($){
 		
 		var instructions = [
 			'<div id="sN_instructions">',
-			'<p>To begin your presentation</p>',
+			'<p>Use the arrows to begin</p>',
 			'</div>'
 			].join('');
 		
