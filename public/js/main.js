@@ -165,8 +165,8 @@
         timer  = null;
 
     $(canvas).css({
-      left: target.x-20,
-      top: target.y-20
+      left: target.x-27,
+      top: target.y-27
     });
 
     $(document.body).append(canvas);
