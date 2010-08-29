@@ -179,16 +179,34 @@ body > .sN_pin_cushion {
 	font-size: 12px;
 }
 
+a#sN_delete {
+	position: absolute;
+	top: 6px;
+	left: 9px;
+	color: #909090;;
+	margin: 0 0 0 0;
+	line-height: 1;
+	height: 13px;
+	width: 11px;
+	font-size: 0;
+	text-indent: -9999px;
+	background: transparent url('../img/trash-icon.png') no-repeat 0 0;
+
+}
+a#sN_delete:hover {
+	background: transparent url('../img/trash-icon-hover.png') no-repeat 0 0;
+}
+
 .sN_actions {
   -webkit-border-radius: 0 3px 3px 0;
   -moz-border-radius:  0 3px 3px 0;
   border-radius:  0 3px 3px 0;
   background-color: inherit;
-  padding: 5px 8px 5px 8px;
   position: absolute;
-  right: 3px;
+  right: -5px;
   top: -10px;
-  width: 6px;
+height: 26px;
+  width: 30px;
 }
 .sN_pin_cushion .sN_button {
     padding: 3px 12px 4px 12px;
@@ -311,3 +329,5 @@ a#sN_sortNotes {
 	margin:0;
 	line-height: 1;
 }
+
+

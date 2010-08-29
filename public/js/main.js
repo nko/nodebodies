@@ -325,7 +325,7 @@ if (!document.getElementById('.sN_menu')){(function($){
          <div class="sN_pin"><span></span></div>\
          <div class="sN_annotation sN_hidden">\
             <div class="sN_actions">\
-              <div class="sN_delete_annotation">X</div>\
+              <div class="sN_delete_annotation"><a href="#" id="sN_delete">delete</a></div>\
             </div>\
             <textarea></textarea>\
        </div>');
