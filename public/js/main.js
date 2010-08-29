@@ -266,7 +266,9 @@
     function pin_move(e){
       if (moved || Math.max(loc.x - e.pageX, loc.y - e.pageY) > 8){
         moved = true;
-        cushion.appendTo(document.documentElement);
+        if(cushion.parent()[0] !== document.documentElement) {
+          cushion.appendTo(document.documentElement);
+        }
         cushion.css({ top: e.pageY - 8, left: e.pageX - 8 });
       }
     }
@@ -497,7 +499,7 @@
          <div class="sN_pin"><span></span></div>\
          <div class="sN_annotation sN_hidden">\
             <div class="sN_actions">\
-              <div class="sN_delete_annotation"><a href="#" id="sN_delete">delete</a></div>\
+              <div class="sN_delete_annotation"><span class="sN_delete">delete</span></div>\
             </div>\
             <textarea></textarea>\
        </div>');
