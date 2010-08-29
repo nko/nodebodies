@@ -162,11 +162,12 @@
         cw     = 40,
         ch     = 40,
         dir    = adding ? 1 : -1,
-        timer  = null;
+        timer  = null,
+        offset = $(target).offset();
 
     $(canvas).css({
-      left: target.x-27,
-      top: target.y-27
+      left: offset.left-12,
+      top: offset.top-12
     });
 
     $(document.body).append(canvas);
@@ -200,7 +201,7 @@
         bounds = $.extend({}, anchor),
         citation;
     
-    pin_animation(anchor, true);
+    pin_animation(cushion, true);
     //console.log(id, cushion, target);
     citation = {
       path : path_node(target),
