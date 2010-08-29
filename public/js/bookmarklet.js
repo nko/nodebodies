@@ -45,12 +45,11 @@
        existingScripts[0].parentNode.removeChild(existingScripts[0]); 
     }
 
-    var css =  document.createElement("link");
-    css.rel = "stylesheet";
-    css.href = "%_CURRENT_URL_%/css/main.css";
-    document.getElementsByTagName("head")[0].append(css);
-     
-    
+    var css =  document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = '%_CURRENT_URL_%/css/main.css';
+    document.getElementsByTagName('head')[0].appendChild(css);
+   
     for (var i =0; i<scripts.length; i++) {
         getScript(scripts[i], handleLoad);
     }
