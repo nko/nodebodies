@@ -431,7 +431,6 @@
       }).appendTo(document.body);
 
       var update = function() {
-
         var val = this.value.replace(/</g, '&lt;')
                             .replace(/>/g, '&gt;')
                             .replace(/&/g, '&amp;')
