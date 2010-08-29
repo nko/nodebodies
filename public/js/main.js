@@ -258,7 +258,6 @@ function basic_formatter(text){
 
     $(window).mousemove(pin_move);
     cushion.one('click', function(e){
-      console.log('unbind')
       $(window).unbind("mousemove", pin_move);
 
       //get the element underneath the pin
