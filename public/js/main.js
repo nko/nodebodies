@@ -293,17 +293,36 @@
   });
 
   // The bookmarklet is ready for use
-  window.bookmarkletPreloaderDone = function(bookmarkletUrl) {
+  window.bookmarkletPreloaderDone = function(bookmarkletUrl, forceNew) {
     // determine if we have annotation session for this url
-    var matches = document.cookie.match(/citation_session=([\w]+)/);
+    var matches = document.cookie.match(/citation_session=([\w]+)/),
+        setCitationSession = function(id) {
+          window.sitations.sessionId = id;
+          document.cookie = "citation_session=" + 
+                            window.sitations.sessionId + 
+                            "; expires=" +
+                            (new Date((new Date().getTime()+
+                              (1000*60*60*24*30)))).toGMTString() +
+                            "; domain=sitations.com";
+        };
+    
+    if (matches && matches.length === 2 && !forceNew) {
+      setCitationSession(matches[1]);
 
-    if (matches && matches.length === 2) {
-      window.sitations.sessionId = matches[1];
-      document.cookie = "citation_session=" + 
-                        window.sitations.sessionId + "; expires=" +
-                        (new Date((new Date().getTime()+(1000*60*60*24*30)))).toGMTString() +
-                        "; domain=sitations.com";
-      
+      $.ajax({
+        url: bookmarkletUrl + "/citation/" + window.sitations.sessionId,
+        type: 'get',
+        dataType: 'json',
+        success : function(data) {
+          // XXX: hydrate the session into dom elements
+        },
+        error : function() {
+          // Create a new session, cuz we're baller like that.
+          window.document.cookie="";
+          window.bookmarkletPreloaderDone(bookmarkletUrl, true);
+        }
+      });
+
     // This is a new session
     } else {
       $.ajax({
@@ -316,11 +335,7 @@
           notes:[]
         }),
         success : function(session) {
-          window.sitations.sessionId = session.id;
-          document.cookie = "citation_session=" + 
-                            session.id + "; expires=" +
-                            (new Date((new Date().getTime()+(1000*60*60*24*30)))).toGMTString() +
-                            "; domain=sitations.com";
+          setCitationSession(session.id);
         },
         error : function(session) {
           // TODO: bit of error handling might be handy here?
