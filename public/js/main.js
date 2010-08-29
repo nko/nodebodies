@@ -258,7 +258,6 @@ function basic_formatter(text){
 
     $(window).mousemove(pin_move);
     cushion.one('click', function(e){
-      console.log('unbind')
       $(window).unbind("mousemove", pin_move);
 
       //get the element underneath the pin
@@ -556,7 +555,6 @@ function basic_formatter(text){
        <ul id="sN_menu">\
         <li class="sN_button" id="sN_add"><span>Add</span></li>\
         <li class="sN_button" id="sN_toggle"><span>Toggle</span></li>\
-        <li class="sN_button" id="sN_present"><span>Present</span></li>\
         <li class="sN_button" id="sN_share"><span>Share</span></li>\
         <li class="sN_button" id="sN_clear"><span>Clear All</span></li>\
       </ul>\
@@ -565,6 +563,7 @@ function basic_formatter(text){
         <ol id="sN_sidebar" class="sN_hidden">\
         </ol>\
       </div>').appendTo(document.body);
+        //<li class="sN_button" id="sN_present"><span>Present</span></li>\ //XXX move back in!
   }
 
   $('#sN_share').live('click', function(ev) {
