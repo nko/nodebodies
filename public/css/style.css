@@ -1,0 +1,288 @@
+/* Reset 
+----------------------------------------------------------------------*/
+html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote,
+pre, form, fieldset, table, th, td, * { margin: 0; padding: 0; }
+
+html, body {
+	background: #ececec url('../images/bodybg.gif') top left repeat-x;
+	color: #222;
+	font-family: "Arial", sans-serif;
+}
+
+@font-face {
+  font-family: 'Ubahn';
+  src: url("../images/Ubahn.ttf");
+}
+
+
+
+a:link, a:visited {
+	text-decoration: none;
+	color: #2f7fca;
+}
+
+a:hover {
+	text-decoration: none;
+	color: #428fd7;
+}
+
+a#bookmarklet {
+	float: right;
+	width: 159px;
+	margin: 30px 20px 0 0;
+	height: 50px;
+	font-size: 0;
+	text-indent: -9999px;	
+	background: transparent url(../images/sitations-logo.jpg) top left no-repeat;
+}
+
+a#bookmarklet:hover {
+	background: transparent url(../images/sitations-logo.jpg) bottom left no-repeat;
+}
+
+#wrapper {
+	margin: 0 auto;
+	width: 750px;
+}
+
+#main {
+	float: left;
+	width: 750px;
+	padding: 0px 0 30px 0;
+	margin: 0 0 0 0;
+	background: #FFF;
+	-moz-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
+	-webkit-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
+        box-shadow: 0px 1px 3px 0px #555;
+}
+
+#hero-main {
+float: right;
+width: 520px;
+padding: 40px 50px 40px 40px;
+	background: rgba(41, 43, 47, 0.92);
+	border-right: none;
+	-moz-border-radius: 25px 0 0 25px;
+	-webkit-border-radius: 25px 0 0 25px;
+	-webkit-background-clip: padding-box;
+}
+
+#hero-main h2 {
+	font-size: 40px;
+	color: white;
+	font-weight: normal;
+	line-height: 1.1;
+	margin: 0;
+	display: block;
+}
+
+#hero-main h3 {
+	font-size: 14px;
+	color: white;
+	font-weight: normal;
+	line-height: 1.5;
+	margin: 30px 0 0 0;
+	display: block;
+}
+
+#hero-main p {
+	font-size: 12px;
+	color: white;
+	font-weight: normal;
+	line-height: 1.5;
+	margin: 30px 0 0 0;
+	display: block;
+}
+
+h1, h2, h4 {
+	font-family: "Ubahn", sans-serif;
+}
+
+
+
+p.instructions {
+	width: 690px;
+	padding: 25px 30px;
+	text-align: right;
+	font-size: 12px;
+	color: #9e9e9e;
+	margin: 0;
+}
+
+h1 {
+	font-size: 44px;
+	line-height: 1;
+	margin-bottom: 10px;
+}
+
+h2 {
+	width: 500px;
+	margin-bottom: 30px;
+	font-size: 18px;
+	color: #b1b1b1;
+}
+
+#liveFeed {
+	float: left;
+	clear: both;
+	width: 650px;
+	margin: 50px 0 0 0;
+	padding: 0 50px;
+	
+}
+
+
+#liveFeed h4 {
+	font-size: 30px;
+	color: #222;
+	font-weight: normal;
+	line-height: 1;
+	margin: 0 0 0 0;
+	display: block;
+}
+
+.column {
+float: left;
+width: 300px;
+margin: 0 30px 20px 0;
+}
+
+.column p {
+	line-height: 1.5;
+	margin: 20px 0 0 0;
+	font-size: 12px;
+	color: #4b4b4b;
+}
+
+#feedUl {
+	float: right;
+	width: 300px;
+	position: relative;
+	margin: 0;
+	padding: 0;
+	min-height: 92px;
+}
+
+
+#liveFeed ul {
+	width: 100%;
+	margin: 0;
+	list-style: none;
+	color: #656565;
+}
+
+#liveFeed ul li {
+	margin: 0 0 20px 0;
+	font-size: 12px;
+	line-height: 1.5;
+}
+
+#liveFeed ul li strong {
+	display: block;
+}
+
+#feedOverlay {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 320px;
+	height: 92px;
+	background: transparent url('../images/feedOverlay.png') bottom left repeat-x;
+
+}
+a#helpLink {
+	background: #c1c1c1;
+	color:white;
+	text-align: center;
+	height: 16px;
+	width: 18px;
+	padding-top: 2px;
+	display: block;
+	float: right;
+	margin: -2px 0 0 10px;
+	font-weight: bold;
+	font-size: 13px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+		text-decoration: none;
+
+}
+
+a#helpLink:hover {
+	background: #a70000;
+	color:white;
+	text-decoration: none;
+}
+
+#installation_instructions {
+	background: #f1f1f1;
+	padding: 30px 50px;
+	float: left;
+	width: 650px;
+	display: none;
+	margin: 0 0 50px 0;
+	border-top: 1px solid #e4e4e4;
+	border-bottom: 1px solid #e4e4e4;
+}
+
+#installation_instructions ol {
+	list-style:none;
+	font-size: 13px;
+	color: #656565;
+}
+
+#installation_instructions ol li{
+	margin: 10px 0;
+}
+
+#installation_instructions ol li.indent {
+	margin: 0 0 0 20px;
+}
+
+p#footer {
+	float: left;
+	text-align: center;
+	color: #909090;
+	font-size: 14px;
+	padding: 30px 0;
+	width: 750px;
+}
+
+a#node-knockout {
+	float: left;
+	width: 98px;
+	margin: 20px 20px 0 20px;
+	height: 35px;
+	font-size: 0;
+	text-indent: -9999px;	
+	background: transparent url(../images/node-knockout-voteButton.png) top left no-repeat;
+}
+
+
+img#noteMarker {
+	margin-top: 0;
+	float: left;
+	width: 95px;
+	height: 124px;
+	display: block;
+}
+
+span#sitationCount {
+	float: left;
+	margin-top: 20px;
+	background: #363636;
+	color: #FFF;
+	width: 200px;
+	padding: 5px 10px;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+p.subtext {
+	float: left;
+	clear: left;
+	font-size: 11px;
+	font-weight: bold;
+	color: #b1b1b1;
+	margin: 5px 0 0 0;
+}
