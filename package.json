@@ -35,7 +35,7 @@
     "connect" : ">= 0.2.4",
     "socket.io" : ">= 0.5.3",
     "mongodb" : ">= 0.7.9",
-    "leaf": ">= 0.0.2"
+    "leaf": ">= 0.0.4"
    },
    "directories": {
        "lib": "src/lib",
