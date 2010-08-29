@@ -278,6 +278,43 @@ if (!document.getElementById('.sN_menu')){(function($){
 		});
 
 	});
+	
+  ///////
+  /// KEYBOARD DETECTION
+	document.onkeyup = onKeyUp;
+	function onKeyUp(e){
+		var x = '';
+		if (document.all)
+		{
+			var evnt = window.event;
+			x = evnt.keyCode;
+		}
+		else
+		{
+			x = e.keyCode;
+		}
+	
+        if (x === 37)
+        {
+			$('#sN_instructions').fadeOut('fast', function () {
+				$('#sN_instructions').remove();
+			});
+			
+			// start presentation or move back 1
+        }
+
+		if (x === 39)
+        {
+			$('#sN_instructions').fadeOut('fast', function () {
+				$('#sN_instructions').remove();
+			});
+			
+			// start presentation or move forward 1
+			
+        }			
+	}	
+	
+	
 
   ///////
   /// PAGE INIT
@@ -320,10 +357,9 @@ if (!document.getElementById('.sN_menu')){(function($){
 	<a href="#" id="sN_exitPresentation" title="New note" class="button">Exit Presentation</a>\
 	<span>1 <em>of</em> 10</span>\
 	<a href="#" id="sN_sortNotes" title="New note" class="button">Edit Presentation Order</a>\
-	</div>').appendTo(document.body);
-
-	
+	</div>').appendTo(document.body);	
   }
+
 
   $(function(){
     template_page();
@@ -382,8 +418,7 @@ if (!document.getElementById('.sN_menu')){(function($){
 
       update.apply(this);
 
-    });
-
+    });	
     return this;
   };
 
