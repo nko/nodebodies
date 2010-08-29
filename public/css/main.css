@@ -1,3 +1,12 @@
+a {
+   outline: none;
+	line-height: 1;
+}
+
+a.button:hover {
+	color: white;
+}
+
 #sN_menu {
   position: fixed;
   top: 8px;
@@ -209,4 +218,82 @@ body > .sN_pin_cushion {
   height: 0;
   clear: both;
   visibility: hidden;
+}
+
+#sN_presentationToolbar {
+	background: rgba(23,24,25,0.8);
+	border-top: 1px solid #27292b;
+	width: 100%;
+	position: fixed;
+	bottom: -41px;
+	height: 40px;
+	left: 0;
+	font-size: 12px;
+  font-family: "Helvetica","Arial", sans-serif;
+
+}
+
+#sN_presentationToolbar a {
+	padding: 10px 25px;
+	color: #909090;
+	text-decoration: none;
+	line-height: 1;
+}
+
+#sN_presentationToolbar a:hover {
+	color: white;
+	text-decoration: none;
+}
+
+a#sN_exitPresentation {
+	position: absolute;
+	left: 0;
+	top: 3px;
+}
+
+a#sN_sortNotes {
+	position: absolute;
+	right: 0;
+	top: 3px;
+}
+
+#sN_presentationToolbar span {
+	margin: 0 auto;
+	text-align: center;
+	display: block;
+	width: 300px;
+	padding: 15px 0;
+	color: #909090;
+	line-height: 1;
+	font-weight: bold;
+}
+
+#sN_presentationToolbar span em {
+	font-weight: normal;
+}
+
+
+
+#sN_instructions {
+	position: fixed;
+	top: 240px;
+	left: 60px;
+	text-align: center;
+	width: 210px;
+	height: 110px;
+	background: rgba(41, 43, 47, 0.62) url('../img/keyboard.png') center 74px no-repeat;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	/*-moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.25);
+	-webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.25);*/
+	z-index: 9999;
+	padding: 25px;
+	display: none;
+	color: white;
+	font-size: 14px;
+	font-weight: bold;
+	font-family: 'Arial', sans-serif;
+	/*border: 1px solid #151515;*/
+	font-family: "Helvetica","Arial", sans-serif;
+  
 }

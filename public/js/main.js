@@ -207,6 +207,78 @@ if (!document.getElementById('.sN_menu')){(function($){
   $('#sN_toggle').live('click', function(){ if(annotations.length){ $(document.documentElement).toggleClass('pins_hidden'); } });
   $('#sN_clear').live('click', function(){annotations = [];$('.sN_pin_cushion').remove();$(document.body).trigger('clear.pin')});
 
+	$("#sN_present").live('click', function (c)
+	{	
+		c.preventDefault(); // this prevents the original href of the link from being opened
+		c.stopPropagation(); // this prevents the click from triggering click events up the DOM from this element
+		
+		$('#sN_side_count').animate({
+			right: '-=38'
+		}, 200, function () {
+			
+		});
+		
+		$('#sN_menu').animate({
+			left: '-=43'
+		}, 200, function () {
+			
+		});
+		
+	
+		$('#sN_presentationToolbar').animate({
+			bottom: '+=41'
+		}, 200, function () {
+			
+		});
+		
+		
+		var instructions = [
+			'<div id="sN_instructions">',
+			'<p>To begin your presentation</p>',
+			'</div>'
+			].join('');
+		
+		$('body').append(instructions);
+		
+		$('#sN_instructions').css({
+			'left' : (($(window).width() / 2) - 130) + 'px'
+		});
+
+		$('#sN_instructions').fadeIn('fast');
+
+	});
+	
+	
+	$("a#sN_exitPresentation").live('click', function (c)
+	{	
+		c.preventDefault(); // this prevents the original href of the link from being opened
+		c.stopPropagation(); // this prevents the click from triggering click events up the DOM from this element
+		
+		$('#sN_side_count').animate({
+			right: '+=38'
+		}, 200, function () {
+			
+		});
+		
+		$('#sN_menu').animate({
+			left: '+=43'
+		}, 200, function () {
+			
+		});
+		
+	
+		$('#sN_presentationToolbar').animate({
+			bottom: '-=41'
+		}, 200, function () {
+		
+		});
+		
+		$('#sN_instructions').fadeOut('fast', function () {
+			$('#sN_instructions').remove();
+		});
+
+	});
+
   ///////
   /// PAGE INIT
 
@@ -243,7 +315,14 @@ if (!document.getElementById('.sN_menu')){(function($){
       <div id="sN_sidebar_wrap">\
         <div id="sN_side_count">0</div>\
         <ul id="sN_sidebar sN_hidden"></ul>\
-      </div>').appendTo(document.body);
+	</div>\
+	<div id="sN_presentationToolbar">\
+	<a href="#" id="sN_exitPresentation" title="New note" class="button">Exit Presentation</a>\
+	<span>1 <em>of</em> 10</span>\
+	<a href="#" id="sN_sortNotes" title="New note" class="button">Edit Presentation Order</a>\
+	</div>').appendTo(document.body);
+
+	
   }
 
   $(function(){
