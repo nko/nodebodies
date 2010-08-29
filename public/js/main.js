@@ -623,7 +623,7 @@ function basic_formatter(text){
         setCitationSession = function(id) {
           exports.sessionId = id;
           document.cookie = "citation_session=" + 
-                            exports..sessionId + 
+                            exports.sessionId + 
                             "; expires=" +
                             (new Date((new Date().getTime()+
                               (1000*60*60*24*30)))).toGMTString() +
