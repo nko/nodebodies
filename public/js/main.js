@@ -5,7 +5,8 @@
       AH = 'annoHash',
       console = window.console || { log:function(){} },
       LUT = {},
-      annotations = [],
+      //annotations = [],
+      annotations = [{"path":"html","hash":535358305268184530,"text":"sdf","anchor":{"x":395,"y":211},"bounds":{"x":395,"y":211}},{"path":"html>body","hash":65417765280628120,"text":"lkj","anchor":{"x":93,"y":12},"bounds":{"x":93,"y":12}},{"path":"a","hash":70653162063225,"text":"test","anchor":{"x":12.850006103515625,"y":5},"bounds":{"x":12.850006103515625,"y":5}}],
       toJSON = Object.toJSON || JSON.stringify;
 
   exports.annotations = annotations;
@@ -194,8 +195,9 @@
 
       //get the element underneath the pin
       cushion.toggleClass('sN_hidden');
+      $(document.documentElement).toggleClass('sN_all_hidden');
       var target = document.elementFromPoint(e.pageX, e.pageY);
-      cushion.toggleClass('sN_hidden');
+      $(document.documentElement).toggleClass('sN_all_hidden');
 
       cushion.data('placed', true);
       cushion.find('.sN_pin').css('cursor','move');
@@ -207,10 +209,11 @@
 
   // pin click -> edit text
   $('.sN_pin').live('mouseup', function(e){
-      var cushion = $(e.target).parents('.sN_pin_cushion');
+      var cushion = $(e.target).parents('.sN_pin_cushion'),
+          id = cushion.attr('id');
       cushion.find('.sN_annotation').removeClass('sN_hidden');
       cushion.find('textarea').autogrow();
-      setTimeout(function(){cushion.find('textarea').focus();}, 0); //if we don't timeout it, this screws up when we reparent the cushion
+      setTimeout(function(){$('#'+id).find('textarea').focus();}, 0); //if we don't timeout it, this screws up when we reparent the cushion
   });
 
   // Drag & Drop pin
@@ -233,9 +236,9 @@
 
       if(moved) {
         //get the element underneath the pin
-        cushion.toggleClass('sN_hidden');
+        $(document.documentElement).toggleClass('sN_all_hidden');
         var target = document.elementFromPoint(e.pageX, e.pageY);
-        cushion.toggleClass('sN_hidden');
+        $(document.documentElement).toggleClass('sN_all_hidden');
 
         //place pin
         place_pin(cushion.attr('id'), target, e.pageX, e.pageY);
@@ -324,10 +327,10 @@
 
   //Action button handlers
   $('#sN_menu>.sN_button:not(#sN_toggle)').live('click',function(){
-    $(document.documentElement).removeClass('pins_hidden');
+    $(document.documentElement).removeClass('sN_pins_hidden');
   })
   $('#sN_add').live('click', do_add);
-  $('#sN_toggle').live('click', function(){ if(annotations.length){ $(document.documentElement).toggleClass('pins_hidden'); } });
+  $('#sN_toggle').live('click', function(){ if(annotations.length){ $(document.documentElement).toggleClass('sN_pins_hidden'); } });
   $('#sN_clear').live('click', clear_pins);
   $('#sN_side_count').live('click', function(){
     if(annotations.length){

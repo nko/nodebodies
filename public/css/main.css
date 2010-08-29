@@ -144,7 +144,13 @@
     left: 20px;
 }
 
-.pins_hidden .sN_pin_cushion {
+.sN_pins_hidden .sN_pin_cushion {
+  display: none !important;
+}
+
+.sN_all_hidden .sN_pin_cushion, 
+.sN_all_hidden #sN_sidebar_wrap, 
+.sN_all_hidden #sN_menu{
   display: none !important;
 }
 
