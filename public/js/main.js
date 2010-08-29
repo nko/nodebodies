@@ -105,7 +105,7 @@ if (!document.getElementById('.sN_menu')){(function($){
       target : target
     };
     annotations[id] = citation;
-    $(document.body).trigger('pinplace',[citation]);
+    $(document.body).trigger('place.pin',[citation]);
   }
 
   function do_add(e){
@@ -187,14 +187,15 @@ if (!document.getElementById('.sN_menu')){(function($){
   //});
   $(".sN_pin_cushion, .sN_menu, .sN_sidebar_wrap").live('click', halt);
 
-  $(document.body).bind('pinplace', function(e, citation){
-    console.log('place');
+  function update_side_count(){
     $('#sN_side_count').text(annotations.length);
-  });
+  }
+  $(document.body).bind('place.pin', update_side_count);
+  $(document.body).bind('clear.pin', update_side_count);
 
   $('#sN_add').live('click', do_add);
   $('#sN_toggle').live('click', function(){$(document.body).toggleClass('pins_hidden');});
-  $('#sN_clear').live('click', function(){});
+  $('#sN_clear').live('click', function(){annotations = [];$('.sN_pin_cushion').remove();$(document.body).trigger('clear.pin')});
 
   ///////
   /// PAGE INIT
