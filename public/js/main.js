@@ -81,6 +81,29 @@
 
   ///////
   /// EVENT HANDLING
+  function save_pins() {
+    var i = 0, l = exports.annotations.length, pin;
+    exports.session = {url : window.location.toString(), notes: []};
+    for (i; i<l; i++) {
+      pin = exports.annotations[i];
+      exports.session.notes.push({
+        hash: pin.hash,
+        path: pin.path,
+        text: pin.text,
+        anchor: pin.anchor,
+        bounds: pin.bounds
+      });
+    }
+    $.ajax({
+      url: 'http://sitations.com/citation/' + exports.sessionId,
+      type: 'put',
+      contentType: 'application/json',
+      dataType: 'json',
+      data : toJSON(exports.session),
+      sucess : function(data) {},
+      error : function() { console.dir(arguments) }
+    });
+  }
 
   function place_pin(id, target, pageX, pageY) {
     target = $(target);
@@ -219,6 +242,7 @@
     elem.find('.sN_text').text(citation.text);
   }
   function update_side_count(){
+    save_pins();
     $('#sN_side_count').text(annotations.length)[(annotations.length ? 'add' : 'remove')+'Class']('sN_has_citations');
   }
 
