@@ -96,11 +96,11 @@
         });
         origTarget.css('position', origTarget.css('position').replace('static','relative'));
         origTarget.append(pin);
-        
+
         // save off our state
         $.ajax({
           // TODO: this needs to be the url where the bmklt came from
-          url: "http://localhost:8080/citation/",
+          url: window.bookmarkletSourceUrl + '/citation/',
           type: "post",
           contentType: "application/json",
           dataType: "json",

@@ -10,7 +10,10 @@
         script.src=url;
         script.text='jQuery.noConflict( true );';
         script.onload=script.onreadystatechange = function(){
-            if ( !done && (!this.readyState || this.readyState==='loaded' || this.readyState==='complete') ){
+            if ( !done && (!this.readyState ||
+                 this.readyState==='loaded' || 
+                 this.readyState==='complete') )
+            {
                 done=true;
                 success();
             }
@@ -22,6 +25,8 @@
         if (window.bookmarkletPreloaderDone) {
             bookmarkletPreloaderDone('%_CURRENT_URL_%');
         }
+ 
+        window.bookmarkletSourceUrl = '%_CURRENT_URL_%';
     }
 
     function handleLoad() {
