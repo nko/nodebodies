@@ -4,14 +4,14 @@ html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote,
 pre, form, fieldset, table, th, td, * { margin: 0; padding: 0; }
 
 html, body {
-	background: #ececec url('../images/bodybg.gif') top left repeat-x;
+	background: #ececec url('/img/bodybg.gif') top left repeat-x;
 	color: #222;
 	font-family: "Arial", sans-serif;
 }
 
 @font-face {
   font-family: 'Ubahn';
-  src: url("../images/Ubahn.ttf");
+  src: url("/img/Ubahn.ttf");
 }
 
 
@@ -33,11 +33,11 @@ a#bookmarklet {
 	height: 50px;
 	font-size: 0;
 	text-indent: -9999px;	
-	background: transparent url(../images/sitations-logo.jpg) top left no-repeat;
+	background: transparent url(/img/sitations-logo.jpg) top left no-repeat;
 }
 
 a#bookmarklet:hover {
-	background: transparent url(../images/sitations-logo.jpg) bottom left no-repeat;
+	background: transparent url(/img/sitations-logo.jpg) bottom left no-repeat;
 }
 
 #wrapper {
@@ -187,7 +187,7 @@ margin: 0 30px 20px 0;
 	left: 0;
 	width: 320px;
 	height: 92px;
-	background: transparent url('../images/feedOverlay.png') bottom left repeat-x;
+	background: transparent url('/img/feedOverlay.png') bottom left repeat-x;
 
 }
 a#helpLink {
@@ -255,7 +255,7 @@ a#node-knockout {
 	height: 35px;
 	font-size: 0;
 	text-indent: -9999px;	
-	background: transparent url(../images/node-knockout-voteButton.png) top left no-repeat;
+	background: transparent url(/img/node-knockout-voteButton.png) top left no-repeat;
 }
 
 
