@@ -5,8 +5,7 @@
       AH = 'annoHash',
       console = window.console || { log:function(){} },
       LUT = {},
-      //annotations = [],
-      annotations = [{"path":"html","hash":535358305268184530,"text":"sdf","anchor":{"x":395,"y":211},"bounds":{"x":395,"y":211}},{"path":"html>body","hash":65417765280628120,"text":"lkj","anchor":{"x":93,"y":12},"bounds":{"x":93,"y":12}},{"path":"a","hash":70653162063225,"text":"test","anchor":{"x":12.850006103515625,"y":5},"bounds":{"x":12.850006103515625,"y":5}}],
+      annotations = [],
       toJSON = Object.toJSON || JSON.stringify;
 
   exports.annotations = annotations;
@@ -166,8 +165,8 @@
         timer  = null;
 
     $(canvas).css({
-      left: target.x-20,
-      top: target.y-20
+      left: target.x-27,
+      top: target.y-27
     });
 
     $(document.body).append(canvas);
