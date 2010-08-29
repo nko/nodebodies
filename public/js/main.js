@@ -1,5 +1,5 @@
 (function($){
-  var exports = window, //XXX for testing
+  var exports = window.sitations = {},
       AH = 'annoHash',
       console = window.console || { log:function(){} },
       LUT = {},
@@ -92,8 +92,8 @@
     cushion.css({top: anchor.y - 8, left: anchor.x - 8, position: 'absolute'}).appendTo(target);
     target.css('position', target.css('position').replace('static','relative'));
     citation = {
-      path : path_node(target),
-      hash : hash_node(target),
+      path : exports.path_node(target),
+      hash : exports.hash_node(target),
       text : cushion.find("textarea").val(),
       anchor : {
         x: anchor.x,
@@ -279,18 +279,57 @@
 
     //hash everything, we're going to be using it.
     $('*').each(function(i, el) { //XXX problematic on large docs?
-      var hash = hash_node(el);
+      var hash = exports.hash_node(el);
       if (LUT[hash]) {
         if (!LUT[hash].push) { LUT[hash] = [LUT[hash]]; }
         LUT[hash].push(el);
       } else {
         LUT[hash] = el;
       }
-      $.data(el, AH, hash_node(el));
+      $.data(el, AH, exports.hash_node(el));
     });
 
     window.$ = $; //XXX for testing
   });
+
+  // The bookmarklet is ready for use
+  window.bookmarkletPreloaderDone = function(bookmarkletUrl) {
+    // determine if we have annotation session for this url
+    var matches = document.cookie.match(/citation_session=([\w]+)/);
+
+    if (matches && matches.length === 2) {
+      window.sitations.sessionId = matches[1];
+      document.cookie = "citation_session=" + 
+                        window.sitations.sessionId + "; expires=" +
+                        (new Date((new Date().getTime()+(1000*60*60*24*30)))).toGMTString() +
+                        "; domain=sitations.com";
+      
+    // This is a new session
+    } else {
+      $.ajax({
+        url: bookmarkletUrl + "/citation/",
+        type: "post",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          url: window.location.toString(),
+          notes:[]
+        }),
+        success : function(session) {
+          window.sitations.sessionId = session.id;
+          document.cookie = "citation_session=" + 
+                            session.id + "; expires=" +
+                            (new Date((new Date().getTime()+(1000*60*60*24*30)))).toGMTString() +
+                            "; domain=sitations.com";
+        },
+        error : function(session) {
+          // TODO: bit of error handling might be handy here?
+        }
+      });
+    }
+  };
+
+
 })(jQuery.noConflict());
 
 (function($) {
@@ -335,7 +374,5 @@
 
     return this;
   };
-
 })(jQuery);
-
 // vim: set ft=javascript ff=unix et sw=2 ts=4 :
