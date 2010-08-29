@@ -567,6 +567,37 @@ function basic_formatter(text){
       </div>').appendTo(document.body);
   }
 
+  $('#sN_share').live('click', function(ev) {
+    var shareBox = $('<div id="shareBox"><input type="text" value=""/></div>'),
+        el = $(ev.target);
+    shareBox.css({
+      position: 'absolute',
+      zIndex : '9000000',
+      width: 405,
+      height: 20,
+      padding:10,
+      border:'1px solid #f0f',
+      background: 'none repeat scroll 0 0 rgba(245, 245, 245, 0.95)',
+      border: '#D1D1D1 1px solid',
+      
+      top: el.offset().top-10,
+      left: el.offset().left + el.width() + 10
+    });
+    shareBox.find(':input').css({
+     width:400
+    })
+    .attr('value', "http://share.sitations.com/sess-" + exports.sessionId);
+    
+    $(document.body).append(shareBox);
+    $(document).bind('mousedown', function unclickShare(clicked) {
+      if ($(clicked.target).parents("#shareBox").length == 0) {
+        shareBox.remove();
+        $(document).unbind('mousedown', unclickShare);
+      }
+    });
+
+  });
+
 
   $(function(){
     template_page();
@@ -593,7 +624,7 @@ function basic_formatter(text){
         setCitationSession = function(id) {
           exports.sessionId = id;
           document.cookie = "citation_session=" + 
-                            window.sitations.sessionId + 
+                            exports..sessionId + 
                             "; expires=" +
                             (new Date((new Date().getTime()+
                               (1000*60*60*24*30)))).toGMTString() +
@@ -604,7 +635,7 @@ function basic_formatter(text){
       setCitationSession(matches[1]);
 
       $.ajax({
-        url: bookmarkletUrl + "/citation/" + window.sitations.sessionId,
+        url: bookmarkletUrl + "/citation/" + exports.sessionId,
         type: 'get',
         dataType: 'json',
         success : function(data) {
