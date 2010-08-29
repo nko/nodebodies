@@ -41,7 +41,7 @@
   function get_node(n, pathstr) {
     var res = LUT[n],
         path, working;
-    if (!pathstr || !res || !res.push) {
+    if (!pathstr || (res && !res.push)) {
       return res;
     } else {
       if($(pathstr).data(AH) == n) {
@@ -51,9 +51,9 @@
       working = pathstr;
       while(path.length > 0) {
         res = matches_path(n, working);
-        if (res[0]) { return res[0]; }
+        if (res && res[0]) { return res[0]; }
         res = matches_path(n, working.substr(0, working.indexOf(/:nth\(\d+\)$/)));
-        if (res[0]) { return res[0]; }
+        if (res && res[0]) { return res[0]; }
         path.pop();
         working = path.join('>');
       }
