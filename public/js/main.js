@@ -1,5 +1,7 @@
 (function($){
-  var exports = window.sitations = {},
+  var exports = window.sitations = {
+        annotations : {}
+      },
       AH = 'annoHash',
       console = window.console || { log:function(){} },
       LUT = {},
@@ -297,7 +299,7 @@
     // determine if we have annotation session for this url
     var matches = document.cookie.match(/citation_session=([\w]+)/),
         setCitationSession = function(id) {
-          window.sitations.sessionId = id;
+          exports.sessionId = id;
           document.cookie = "citation_session=" + 
                             window.sitations.sessionId + 
                             "; expires=" +
@@ -315,6 +317,8 @@
         dataType: 'json',
         success : function(data) {
           // XXX: hydrate the session into dom elements
+          exports.annotations = data;
+          longPoll();
         },
         error : function() {
           // Create a new session, cuz we're baller like that.
@@ -335,16 +339,35 @@
           notes:[]
         }),
         success : function(session) {
-          setCitationSession(session.id);
+          exports.annotations = session;
+          setCitationSession(session._id);
+          longPoll();
         },
         error : function(session) {
           // TODO: bit of error handling might be handy here?
         }
       });
     }
+
+    function longPoll() {
+      $.ajax({
+        url: bookmarkletUrl + "/events/" + exports.sessionId,
+        type: "get",
+        dataType: "json",
+        success : function(session) {
+          exports.annotations = session;
+          setCitationSession(session._id);
+        },  
+        error : function(session) {
+          // TODO: bit of error handling might be handy here?
+        },
+        complete: function() {
+          longPoll();
+        }  
+      });
+    }
+
   };
-
-
 })(jQuery.noConflict());
 
 (function($) {
