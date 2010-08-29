@@ -126,7 +126,8 @@
         continue;
       }
       cur.id = i;
-      cur.cushion = template_pin(target)
+      cur.cushion = template_pin(target);
+      cur.cushion.data('placed', true);
       create_pin(cur, $(target));
       update_pin({}, cur);
       update_sidebar_item({}, cur);
@@ -141,7 +142,7 @@
   }
 
   function create_pin(citation, target) {
-    citation.cushion.css({top: citation.anchor.y - 8, left: citation.anchor.x - 8, position: 'absolute'}).appendTo(target);
+    citation.cushion.css({top: citation.anchor.y - 8, left: citation.anchor.x - 8, position: 'absolute'}).prependTo(target);
     target.css('position', target.css('position').replace('static','relative'));
     $(document.body).trigger('place.pin',[citation]);
   }
@@ -175,7 +176,6 @@
     };
     annotations[id] = citation;
     create_pin(citation, target)
-    $(document.body).trigger('place.pin',[citation]);
   }
 
   function do_add(e){
@@ -219,12 +219,12 @@
         loc = {x: e.pageX, y: e.pageY},
         moved = false;
     if (!cushion.data('placed')) {return;}
+    e.preventDefault();
     function pin_move(e){
-      var offset;
-      if (moved || Math.max(loc.x - e.pageX, loc.y - e.pageY) > 10){
+      if (moved || Math.max(loc.x - e.pageX, loc.y - e.pageY) > 8){
         moved = true;
-        if (!offset) {offset = cushion.parent().offset()}
-        cushion.css({ top: e.pageY - offset.top - 8, left: e.pageX - offset.left - 8 });
+        cushion.appendTo(document.documentElement);
+        cushion.css({ top: e.pageY - 8, left: e.pageX - 8 });
       }
     }
     $(window).mousemove(pin_move);
@@ -349,7 +349,7 @@
             </div>\
             <textarea></textarea>\
        </div>');
-    return into ? pin.appendTo(into) : pin;
+    return into ? pin.prependTo(into) : pin;
   }
 
   function template_sidebar_item(){
