@@ -34,16 +34,14 @@
   				$.each(data.latest, 
   					function (i, note)
   					{
-  						if (note.note && note.lastUpdated)
-  						{
-  							note.lastUpdated = note.lastUpdated.substring(0, note.lastUpdated.indexOf('GMT') - 1);
+  						if (note.note && note.lastUpdated){
   							$('ul#siteationsFeed').append('<li><strong>' + prettyDate(note.lastUpdated) + '</strong>' + note.note + '</li>');		
   						}
   					});
   			} 
   		});
   		
-  		setTimeout(getLatest, 1000);
+  		setTimeout(getLatest, 5000);
 		};
 		
 		getLatest();
