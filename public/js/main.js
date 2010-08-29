@@ -10,6 +10,29 @@
 
   exports.annotations = annotations;
 
+//  - Blank lines are paragraph breaks
+//  - *word* is bold
+//  - /word/ is italic
+function basic_formatter(text){
+  var lines = text.split(/\n/),
+      formatRe = /\B\*([^\*]+?)\*\B|\B\/([^\/]+?)\/\B/g,
+      toRet=[];
+  $.each(lines, function(i,line){
+    if(line){
+      toRet.push(line.replace(formatRe, function(match, p1, p2){
+        if(p1){
+          return '<b>'+p1+'</b>';
+        } else if(p2){
+          return '<i>'+p2+'</i>';
+        } else {
+          return match;
+        }
+      }));
+    }
+  });
+  return '<p>'+toRet.join('</p><p>')+'</p>';
+}
+
   ///////
   /// NODE IDENTIFICATION & MATCHING
 
@@ -257,7 +280,10 @@
           id = cushion.attr('id');
       cushion.find('.sN_annotation').removeClass('sN_hidden');
       cushion.find('textarea').autogrow();
-      setTimeout(function(){$('#'+id).find('textarea').focus();}, 0); //if we don't timeout it, this screws up when we reparent the cushion
+      setTimeout(function(){
+        cushion.find('.sN_hover').addClass('sN_hidden');
+        $('#'+id).find('textarea').focus();
+      }, 0); //if we don't timeout it, this screws up when we reparent the cushion
   });
 
   // Drag & Drop pin
@@ -266,6 +292,7 @@
         loc = {x: e.pageX, y: e.pageY},
         moved = false;
     if (!cushion.data('placed')) {return;}
+    cushion.find('.sN_hover').addClass('sN_hidden');
     e.preventDefault();
     function pin_move(e){
       if (moved || Math.max(loc.x - e.pageX, loc.y - e.pageY) > 8){
@@ -279,6 +306,7 @@
     $(window).mousemove(pin_move);
     $(window).one("mouseup", function (e) {
       $(window).unbind("mousemove", pin_move);
+      cushion.find('.sN_hover').removeClass('sN_hidden');
 
       if(moved) {
         //get the element underneath the pin
@@ -297,10 +325,15 @@
 
     if(!citation) return;
 
-    setTimeout(function(){$(e.target).parent('.sN_annotation').addClass('sN_hidden');},50);
+    setTimeout(function(){$(e.target).parent('.sN_annotation').addClass('sN_hidden');},0);
     citation.text = e.target.value || '';
+    citation.cushion.find('.sN_hover').removeClass('sN_hidden').html(basic_formatter(citation.text));
     $(document.body).trigger('text.pin', [citation]);
   });
+
+  function get_share_link(){
+    return 'http://share.sitations.com/sess-'+exports.sessionId;
+  }
 
   function halt(e){
     //console.log('halted', e);
@@ -328,7 +361,7 @@
     }
     elem.attr('id', 'sN_s'+citation.id);
     elem.find('.sN_num').text(citation.id + 1);
-    elem.find('.sN_text').text(citation.text);
+    elem.find('.sN_text').html(basic_formatter(citation.text));
   }
   function update_side_count(){
     $('#sN_side_count').text(annotations.length)[(annotations.length ? 'add' : 'remove')+'Class']('sN_has_citations');
@@ -344,12 +377,11 @@
     $('#sN_side_count').removeClass('sN_side_closer');
   });
 
-  $(".sN_pin_cushion .sN_delete_annotation").live('click', function(e){
+  $(".sN_pin_cushion .sN_delete_annotation").live('mousedown', function(e){
     var target = $(e.target),
-        id = ~~(target.attr('id').substr(3)),
+        id = ~~(target.parents('.sN_pin_cushion').attr('id').substr(3)),
         citation = annotations[id],
         cur;
-
     //renumber everything after
     for (var i = id, ii = annotations.length; i < ii; i++) {
       cur = annotations[i];
@@ -501,6 +533,7 @@
     var pin = $('\
        <div class="sN_pin_cushion clickable">\
          <div class="sN_pin"><span></span></div>\
+         <div class="sN_hover sN_hidden"></div>\
          <div class="sN_annotation sN_hidden">\
             <div class="sN_actions">\
               <div class="sN_delete_annotation"><span class="sN_delete">delete</span></div>\

@@ -7,7 +7,6 @@
   margin: 0;
   padding-left: 2px;
   width: 40px;
-  overflow: hidden;
   background: rgba(245, 245, 245, 0.95);
   /*background: #f1f1f1;*/
   border: 1px solid #d1d1d1;
@@ -201,7 +200,7 @@
   font-family: "Helvetica","Arial", sans-serif;
 }
 
-.sN_annotation {
+.sN_annotation, .sN_hover {
   -webkit-border-radius: 5px 0 5px 5px;
   -moz-border-radius: 5px 0 5px 5px;
   border-radius: 5px 0 5px 5px;
@@ -290,6 +289,18 @@
     );
     border-top: 1px solid #60a5cb;
 }
+
+.sN_hover { display: none; }
+.sN_hover > p {
+  margin: .5em 0 0 .5em !important;
+  padding: 0 !important;
+  color: #fff;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.5;
+
+}
+.sN_pin:hover + .sN_hover { display: block; }
 
 .sN_hidden {
   display: none !important;
