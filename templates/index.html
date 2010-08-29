@@ -34,7 +34,6 @@
   				$.each(data.latest, 
   					function (i, note)
   					{
-  						console.log(data);
   						if (note.note && note.lastUpdated)
   						{
   							note.lastUpdated = note.lastUpdated.substring(0, note.lastUpdated.indexOf('GMT') - 1);
