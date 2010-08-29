@@ -5,7 +5,8 @@
       AH = 'annoHash',
       console = window.console || { log:function(){} },
       LUT = {},
-      annotations = [];
+      annotations = [],
+      toJSON = Object.toJSON || JSON.stringify;
 
   exports.annotations = annotations; //XXX for testing
 
@@ -354,7 +355,7 @@
         dataType: 'json',
         success : function(data) {
           // XXX: hydrate the session into dom elements
-          exports.annotations = data;
+          exports.session = data;
           longPoll();
         },
         error : function() {
@@ -371,12 +372,12 @@
         type: "post",
         contentType: "application/json",
         dataType: "json",
-        data: JSON.stringify({
+        data: toJSON({
           url: window.location.toString(),
-          notes:[]
+          notes: new Array()
         }),
         success : function(session) {
-          exports.annotations = session;
+          exports.session = session;
           setCitationSession(session._id);
           longPoll();
         },
@@ -392,7 +393,7 @@
         type: "get",
         dataType: "json",
         success : function(session) {
-          exports.annotations = session;
+          exports.session = session;
           setCitationSession(session._id);
         },  
         error : function(session) {
@@ -403,7 +404,6 @@
         }  
       });
     }
-
   };
 })(jQuery.noConflict());
 
