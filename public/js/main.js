@@ -2,6 +2,7 @@
 if (!document.getElementById('.sN_menu')){(function($){
   var exports = window, //XXX for testing
       AH = 'annoHash',
+      console = window.console || { log:function(){} },
       LUT = {},
       annotations = [];
 
@@ -246,7 +247,6 @@ if (!document.getElementById('.sN_menu')){(function($){
   }
 
   $(function(){
-    $('head').append('<link rel="stylesheet" href="http://localhost:8080/css/main.css" type="text/css" />');
     template_page();
 
     //hash everything, we're going to be using it.

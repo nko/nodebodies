@@ -30,7 +30,7 @@
   padding: 0;
   float: left;
   border: none;
-  background: transparent url('http://localhost:8080/img/actions_sprite.png') no-repeat;
+  background: transparent url('http://sitations.com/img/actions_sprite.png') no-repeat;
   cursor: pointer;
 }
 #sN_menu > #sN_button > span {
