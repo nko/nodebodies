@@ -10,6 +10,29 @@
 
   exports.annotations = annotations;
 
+//  - Blank lines are paragraph breaks
+//  - *word* is bold
+//  - /word/ is italic
+function basic_formatter(text){
+  var lines = text.split(/\n/),
+      formatRe = /\B\*([^\*]+?)\*\B|\B\/([^\/]+?)\/\B/g,
+      toRet=[];
+  $.each(lines, function(i,line){
+    if(line){
+      toRet.push(line.replace(formatRe, function(match, p1, p2){
+        if(p1){
+          return '<b>'+p1+'</b>';
+        } else if(p2){
+          return '<i>'+p2+'</i>';
+        } else {
+          return match;
+        }
+      }));
+    }
+  });
+  return '<p>'+toRet.join('</p><p>')+'</p>';
+}
+
   ///////
   /// NODE IDENTIFICATION & MATCHING
 
@@ -328,7 +351,7 @@
     }
     elem.attr('id', 'sN_s'+citation.id);
     elem.find('.sN_num').text(citation.id + 1);
-    elem.find('.sN_text').text(citation.text);
+    elem.find('.sN_text').html(basic_formatter(citation.text));
   }
   function update_side_count(){
     $('#sN_side_count').text(annotations.length)[(annotations.length ? 'add' : 'remove')+'Class']('sN_has_citations');
