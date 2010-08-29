@@ -148,6 +148,44 @@
     $(document.body).trigger('place.pin',[citation]);
   }
 
+  function pin_animation(target, adding, doneFn) {
+    
+    var canvas = $("<canvas height='40' width='40' style='position:absolute;z-index:900000'></canvas>"),
+        ctx    = canvas[0].getContext('2d'),
+        tick   = adding ? 0 : 10,
+        cx     = 20,
+        cy     = 20,
+        cw     = 40,
+        ch     = 40,
+        dir    = adding ? 1 : -1,
+        timer  = null;
+
+    $(canvas).css({
+      left: target.x-20,
+      top: target.y-20
+    });
+
+    $(document.body).append(canvas);
+    timer = setInterval(function() {
+      ctx.clearRect(0,0,cw,ch);
+      var opacity = 255 - tick*25;
+      ctx.strokeStyle = "rgba(212, 71, 0," + opacity/255 + ")";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, tick*2, 0, Math.PI*2, true);
+      ctx.closePath();
+      ctx.stroke();
+      tick += dir;
+      if (tick > 10 || tick < 0) {
+        clearInterval(timer);
+        canvas.remove();
+        if ($.isFunction(doneFn)) {
+          doneFn();
+        }
+      } 
+    }, 20);
+  }
+
   function place_pin(id, target, pageX, pageY) {
     target = $(target);
     if(typeof id == 'string'){ id = ~~(id.substr(3)); }
@@ -157,6 +195,8 @@
         anchor = { x: pageX - offset.left, y: pageY - offset.top },
         bounds = $.extend({}, anchor),
         citation;
+    
+    pin_animation(anchor, true);
     //console.log(id, cushion, target);
     citation = {
       path : path_node(target),
@@ -226,7 +266,9 @@
     function pin_move(e){
       if (moved || Math.max(loc.x - e.pageX, loc.y - e.pageY) > 8){
         moved = true;
-        cushion.appendTo(document.documentElement);
+        if(cushion.parent()[0] !== document.documentElement) {
+          cushion.appendTo(document.documentElement);
+        }
         cushion.css({ top: e.pageY - 8, left: e.pageX - 8 });
       }
     }
@@ -457,7 +499,7 @@
          <div class="sN_pin"><span></span></div>\
          <div class="sN_annotation sN_hidden">\
             <div class="sN_actions">\
-              <div class="sN_delete_annotation"><a href="#" id="sN_delete">delete</a></div>\
+              <div class="sN_delete_annotation"><span class="sN_delete">delete</span></div>\
             </div>\
             <textarea></textarea>\
        </div>');
