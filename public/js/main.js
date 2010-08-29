@@ -19,13 +19,13 @@
     if (ret) {  return ret; }
     html = $(x).html().replace(/\W/g,'');
     ret = 0 - (-1 >>> 1);
-    ret += parseInt(html.substr(0,10), 36) || 0;
+    ret += parseInt(html.substr(0, 10), 36) || 0;
     ret += parseInt(html.substr(Math.max(html.length - 11, 0)), 36) || 0;
     for (i = 0, ii = html.length, ix = (~~(html.length / 10) || 1); i < ii; i += ix) {
       ret += parseInt(html[i], 36) || 0;
     }
     ret += html.length;
-    return ret;
+    return ret + "";
   };
 
   function matches_path(n, pathstr) {
@@ -85,10 +85,12 @@
   ///////
   /// EVENT HANDLING
   function save_pins() {
-    var i = 0, l = exports.annotations.length, pin;
+    if (!exports.sessionId) { return; }
+    var i = 0, l = annotations.length, pin;
+
     exports.session = {url : window.location.toString(), notes: []};
     for (i; i<l; i++) {
-      pin = exports.annotations[i];
+      pin = annotations[i];
       exports.session.notes.push({
         hash: pin.hash,
         path: pin.path,
@@ -107,6 +109,9 @@
       error : function() { console.dir(arguments) }
     });
   }
+  
+  $(document.body).bind('text.pin', save_pins);
+  $(document.body).bind('place.pin', save_pins);
 
   exports.load_pins = load_pins;
   function load_pins(arr) {
@@ -171,6 +176,7 @@
     };
     annotations[id] = citation;
     create_pin(citation, target)
+    $(document.body).trigger('place.pin',[citation]);
   }
 
   function do_add(e){
@@ -277,7 +283,6 @@
     elem.find('.sN_text').text(citation.text);
   }
   function update_side_count(){
-    save_pins();
     $('#sN_side_count').text(annotations.length)[(annotations.length ? 'add' : 'remove')+'Class']('sN_has_citations');
   }
 
@@ -412,7 +417,7 @@
         type: 'get',
         dataType: 'json',
         success : function(data) {
-          // XXX: hydrate the session into dom elements
+          load_pins(data.notes);
           exports.session = data;
           longPoll();
         },
