@@ -417,8 +417,10 @@
         type: "get",
         dataType: "json",
         success : function(session) {
-          exports.session = session;
-          setCitationSession(session._id);
+          if (session) {
+            exports.session = session;
+            setCitationSession(session._id);
+          }
         },  
         error : function(session) {
           // TODO: bit of error handling might be handy here?
