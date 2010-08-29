@@ -106,7 +106,7 @@
         y: bounds.y
       },
       // on page helpfulness
-      cushion : target,
+      cushion : cushion,
       sidebar : sidebar,
       id : id
     };
@@ -184,19 +184,30 @@
 
     if(!citation) return;
 
-    $(e.target).parent('.sN_annotation').addClass('sN_hidden');
+    setTimeout(function(){$(e.target).parent('.sN_annotation').addClass('sN_hidden');},50);
     citation.text = e.target.value || '';
     $(document.body).trigger('text.pin', [citation]);
   });
 
   function halt(e){
+    //console.log('halted', e);
     e.stopPropagation();
     e.preventDefault();
     return false;
   }
 
+  function update_pin(e, citation) {
+    elem = citation.cushion;
+
+    if(!elem) { return; }
+
+    elem.attr('id', 'sN_'+citation.id);
+    elem.find('.sN_pin > span').text(citation.id + 1);
+    elem.find('textarea').val(citation.text);
+  }
+
   function update_sidebar_item(e, citation) {
-    console.log('citation', citation);
+    //console.log('citation', citation);
     elem = citation.sidebar;
     if(!elem || elem.length == 0){
       citation.sidebar = template_sidebar_item().appendTo($('#sN_sidebar'));
@@ -212,6 +223,7 @@
 
   $(document.body).bind('place.pin', update_side_count);
   $(document.body).bind('clear.pin', update_side_count);
+  $(document.body).bind('remove.pin', update_side_count);
 
   //$(document.body).bind('place.pin', update_sidebar_item);
   $(document.body).bind('text.pin', update_sidebar_item);
@@ -220,6 +232,31 @@
     $('#sN_side_count').removeClass('sN_side_closer');
   });
 
+  $(".sN_pin_cushion .sN_delete_annotation").live('click', function(e){
+    var target = $(e.target),
+        id = ~~(target.attr('id').substr(3)),
+        citation = annotations[id],
+        cur;
+
+    //renumber everything after
+    for (var i = id, ii = annotations.length; i < ii; i++) {
+      cur = annotations[i];
+      cur.id--;
+      if(i == -1) {continue;}
+      update_pin({}, cur);
+      update_sidebar_item({}, cur);
+    }
+
+    //delete the citation
+    $(citation.sidebar).remove();
+    $(citation.cushion).remove();
+    annotations.splice(id, 1);
+
+    $(document.body).trigger('remove.pin', [citation]);
+    if(annotations.length == 0) { $(document.body).trigger('clear.pin') }
+  });
+
+  // What happens in citations stays in citations.
   $(".sN_pin_cushion, .sN_menu, .sN_sidebar_wrap").live('click', halt);
 
   //Action button handlers
@@ -244,7 +281,7 @@
        <div class="sN_pin_cushion clickable">\
          <div class="sN_pin"><span></span></div>\
          <div class="sN_annotation sN_hidden">\
-            <div class="sN_actions">\
+            <div class="sN_delete">\
               <div class="sN_delete_annotation">X</div>\
             </div>\
             <textarea></textarea>\
