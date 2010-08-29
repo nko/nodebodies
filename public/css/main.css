@@ -58,15 +58,12 @@
   position: fixed;
   top: 0;
   right: 0;
-  width: 40px;
+  padding-top: 8px;
 }
 
 #sN_side_count {
-  position: absolute;
-  top: 8px;
-  right: 0px;
   float: left;
-  width: 28px; 
+  width: 29px; 
   text-align: center;
   overflow: hidden;
   color: #fff;
@@ -81,12 +78,70 @@
   padding-bottom: 5px;
   -moz-border-radius: 5px 0 0 5px;
   -webkit-border-radius: 5px;
-  background: rgba(186,34,36, 0.9);
-  border: 1px solid #9c1315;
-  border-right: none;
-  cursor: pointer;
+  cursor: default;
   -webkit-user-select: none;
   -moz-user-select: none;
+}
+
+#sN_side_count.sN_has_citations {
+  background: rgba(186,34,36, 0.9);
+  border-color: #9c1315;
+  cursor: pointer;
+}
+
+#sN_side_count.sN_side_closer {
+  background: rgba(156,166,166, 0.9);
+  border-color: #6f7878;
+}
+
+
+#sN_sidebar {
+    width: 220px;
+    /*background: rgba(15, 15, 15, 0.95);*/
+    background: rgba(245, 245, 245, 0.95);
+    /*background: #f1f1f1;*/
+    border: 1px solid #d1d1d1;
+    border-right: none;
+    margin: 0 0 0 30px;
+    padding: 0;
+    overflow: hidden;
+    z-index: 9998;
+    font-family: 'Arial', sans-serif;
+}
+
+
+#sN_sidebar > li,
+#sN_sidebar > li.inactive {
+    list-style: none;
+    font-size: 11px;
+    display: block;
+    float: left;
+    color: #333;
+    width: 145px;
+    min-height: 15px;
+    font-weight: normal;
+    position: relative;
+    margin: 0 0 0 0;
+    padding: 15px 25px 15px 50px;
+    text-align: left;
+    cursor: move;
+    border-top: 1px solid #FFF;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+#sN_sidebar > li > .sN_num {
+    display: block;
+    font-weight: bold;
+    margin: 0;
+    font-size: 16px;
+    color: #000;
+    position: absolute;
+    display: block;
+    height: 20px;
+    width: 20px;
+    top: 16px;
+    line-height: 1;
+    left: 20px;
 }
 
 .pins_hidden .sN_pin_cushion {

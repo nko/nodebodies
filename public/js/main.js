@@ -1,5 +1,4 @@
-
-if (!document.getElementById('.sN_menu')){(function($){
+(function($){
   var exports = window, //XXX for testing
       AH = 'annoHash',
       console = window.console || { log:function(){} },
@@ -84,6 +83,7 @@ if (!document.getElementById('.sN_menu')){(function($){
     target = $(target);
     if(typeof id == 'string'){ id = ~~(id.substr(3)); }
     var cushion = $('#sN_'+id),
+        sidebar = $('#sN_s'+id),
         offset = target.offset(),
         anchor = { x: pageX - offset.left, y: pageY - offset.top },
         bounds = $.extend({}, anchor),
@@ -94,7 +94,7 @@ if (!document.getElementById('.sN_menu')){(function($){
     citation = {
       path : path_node(target),
       hash : hash_node(target),
-      text : $("textarea", target.parent('.sN_pin_cushion')).val(),
+      text : cushion.find("textarea").val(),
       anchor : {
         x: anchor.x,
         y: anchor.y
@@ -103,7 +103,10 @@ if (!document.getElementById('.sN_menu')){(function($){
         x: bounds.x,
         y: bounds.y
       },
-      target : target
+      // on page helpfulness
+      cushion : target,
+      sidebar : sidebar,
+      id : id
     };
     annotations[id] = citation;
     $(document.body).trigger('place.pin',[citation]);
@@ -174,30 +177,46 @@ if (!document.getElementById('.sN_menu')){(function($){
     });
   });
   $('.sN_annotation>textarea').live('blur', function(e){
-    console.log('blur')
+    var id = ~~($(e.target).parents('.sN_pin_cushion').attr('id').substr(3)),
+        citation = annotations[id];
+
+    if(!citation) return;
+
     $(e.target).parent('.sN_annotation').addClass('sN_hidden');
+    citation.text = e.target.value || '';
+    $(document.body).trigger('text.pin', [citation]);
   });
 
   function halt(e){
-    console.log('halt');
     e.stopPropagation();
     e.preventDefault();
     return false;
   }
 
   function update_sidebar_item(e, citation) {
-    elem = $(elem);
-    elem.find('.sN_num').text(citation.target.attr(id).text().substr(3));
+    console.log('citation', citation);
+    elem = citation.sidebar;
+    if(!elem || elem.length == 0){
+      citation.sidebar = template_sidebar_item().appendTo($('#sN_sidebar'));
+      elem = citation.sidebar;
+    }
+    elem.attr('id', 'sN_s'+citation.id);
+    elem.find('.sN_num').text(citation.id + 1);
     elem.find('.sN_text').text(citation.text);
   }
   function update_side_count(){
-    $('#sN_side_count').text(annotations.length);
+    $('#sN_side_count').text(annotations.length)[(annotations.length ? 'add' : 'remove')+'Class']('sN_has_citations');
   }
 
   $(document.body).bind('place.pin', update_side_count);
   $(document.body).bind('clear.pin', update_side_count);
 
-  $(document.body).bind('place.pin', update_sidebar_item);
+  //$(document.body).bind('place.pin', update_sidebar_item);
+  $(document.body).bind('text.pin', update_sidebar_item);
+  $(document.body).bind('clear.pin', function(){
+    $('#sN_sidebar').empty().addClass('sN_hidden');
+    $('#sN_side_count').removeClass('sN_side_closer');
+  });
 
   $(".sN_pin_cushion, .sN_menu, .sN_sidebar_wrap").live('click', halt);
 
@@ -208,6 +227,12 @@ if (!document.getElementById('.sN_menu')){(function($){
   $('#sN_add').live('click', do_add);
   $('#sN_toggle').live('click', function(){ if(annotations.length){ $(document.documentElement).toggleClass('pins_hidden'); } });
   $('#sN_clear').live('click', function(){annotations = [];$('.sN_pin_cushion').remove();$(document.body).trigger('clear.pin')});
+  $('#sN_side_count').live('click', function(){
+    if(annotations.length){
+      $('#sN_sidebar').toggleClass('sN_hidden');
+      $(this).toggleClass('sN_side_closer');
+    }
+  });
 
   ///////
   /// PAGE INIT
@@ -244,7 +269,8 @@ if (!document.getElementById('.sN_menu')){(function($){
       </ul>\
       <div id="sN_sidebar_wrap">\
         <div id="sN_side_count">0</div>\
-        <ul id="sN_sidebar sN_hidden"></ul>\
+        <ol id="sN_sidebar" class="sN_hidden">\
+        </ol>\
       </div>').appendTo(document.body);
   }
 
@@ -310,5 +336,6 @@ if (!document.getElementById('.sN_menu')){(function($){
     return this;
   };
 
-})(jQuery);}
+})(jQuery);
+
 // vim: set ft=javascript ff=unix et sw=2 ts=4 :
