@@ -5,7 +5,8 @@
       AH = 'annoHash',
       console = window.console || { log:function(){} },
       LUT = {},
-      annotations = [],
+      //annotations = [],
+      annotations = [{"path":"html","hash":535358305268184530,"text":"sdf","anchor":{"x":395,"y":211},"bounds":{"x":395,"y":211}},{"path":"html>body","hash":65417765280628120,"text":"lkj","anchor":{"x":93,"y":12},"bounds":{"x":93,"y":12}},{"path":"a","hash":70653162063225,"text":"test","anchor":{"x":12.850006103515625,"y":5},"bounds":{"x":12.850006103515625,"y":5}}],
       toJSON = Object.toJSON || JSON.stringify;
 
   exports.annotations = annotations;
@@ -19,13 +20,13 @@
     if (ret) {  return ret; }
     html = $(x).html().replace(/\W/g,'');
     ret = 0 - (-1 >>> 1);
-    ret += parseInt(html.substr(0,10), 36) || 0;
+    ret += parseInt(html.substr(0, 10), 36) || 0;
     ret += parseInt(html.substr(Math.max(html.length - 11, 0)), 36) || 0;
     for (i = 0, ii = html.length, ix = (~~(html.length / 10) || 1); i < ii; i += ix) {
       ret += parseInt(html[i], 36) || 0;
     }
     ret += html.length;
-    return ret;
+    return ret + "";
   };
 
   function matches_path(n, pathstr) {
@@ -41,7 +42,7 @@
   function get_node(n, pathstr) {
     var res = LUT[n],
         path, working;
-    if (!pathstr || !res || !res.push) {
+    if (!pathstr || (res && !res.push)) {
       return res;
     } else {
       if($(pathstr).data(AH) == n) {
@@ -51,9 +52,9 @@
       working = pathstr;
       while(path.length > 0) {
         res = matches_path(n, working);
-        if (res[0]) { return res[0]; }
+        if (res && res[0]) { return res[0]; }
         res = matches_path(n, working.substr(0, working.indexOf(/:nth\(\d+\)$/)));
-        if (res[0]) { return res[0]; }
+        if (res && res[0]) { return res[0]; }
         path.pop();
         working = path.join('>');
       }
@@ -85,10 +86,12 @@
   ///////
   /// EVENT HANDLING
   function save_pins() {
-    var i = 0, l = exports.annotations.length, pin;
+    if (!exports.sessionId) { return; }
+    var i = 0, l = annotations.length, pin;
+
     exports.session = {url : window.location.toString(), notes: []};
     for (i; i<l; i++) {
-      pin = exports.annotations[i];
+      pin = annotations[i];
       exports.session.notes.push({
         hash: pin.hash,
         path: pin.path,
@@ -107,6 +110,8 @@
       error : function() { console.dir(arguments) }
     });
   }
+  
+  $(document.body).bind('text.pin', save_pins);
 
   exports.load_pins = load_pins;
   function load_pins(arr) {
@@ -122,7 +127,8 @@
         continue;
       }
       cur.id = i;
-      cur.cushion = template_pin(target)
+      cur.cushion = template_pin(target);
+      cur.cushion.data('placed', true);
       create_pin(cur, $(target));
       update_pin({}, cur);
       update_sidebar_item({}, cur);
@@ -137,7 +143,7 @@
   }
 
   function create_pin(citation, target) {
-    citation.cushion.css({top: citation.anchor.y - 8, left: citation.anchor.x - 8, position: 'absolute'}).appendTo(target);
+    citation.cushion.css({top: citation.anchor.y - 8, left: citation.anchor.x - 8, position: 'absolute'}).prependTo(target);
     target.css('position', target.css('position').replace('static','relative'));
     $(document.body).trigger('place.pin',[citation]);
   }
@@ -189,8 +195,9 @@
 
       //get the element underneath the pin
       cushion.toggleClass('sN_hidden');
+      $(document.documentElement).toggleClass('sN_all_hidden');
       var target = document.elementFromPoint(e.pageX, e.pageY);
-      cushion.toggleClass('sN_hidden');
+      $(document.documentElement).toggleClass('sN_all_hidden');
 
       cushion.data('placed', true);
       cushion.find('.sN_pin').css('cursor','move');
@@ -202,10 +209,11 @@
 
   // pin click -> edit text
   $('.sN_pin').live('mouseup', function(e){
-      var cushion = $(e.target).parents('.sN_pin_cushion');
+      var cushion = $(e.target).parents('.sN_pin_cushion'),
+          id = cushion.attr('id');
       cushion.find('.sN_annotation').removeClass('sN_hidden');
       cushion.find('textarea').autogrow();
-      setTimeout(function(){cushion.find('textarea').focus();}, 0); //if we don't timeout it, this screws up when we reparent the cushion
+      setTimeout(function(){$('#'+id).find('textarea').focus();}, 0); //if we don't timeout it, this screws up when we reparent the cushion
   });
 
   // Drag & Drop pin
@@ -214,12 +222,12 @@
         loc = {x: e.pageX, y: e.pageY},
         moved = false;
     if (!cushion.data('placed')) {return;}
+    e.preventDefault();
     function pin_move(e){
-      var offset;
-      if (moved || Math.max(loc.x - e.pageX, loc.y - e.pageY) > 10){
+      if (moved || Math.max(loc.x - e.pageX, loc.y - e.pageY) > 8){
         moved = true;
-        if (!offset) {offset = cushion.parent().offset()}
-        cushion.css({ top: e.pageY - offset.top - 8, left: e.pageX - offset.left - 8 });
+        cushion.appendTo(document.documentElement);
+        cushion.css({ top: e.pageY - 8, left: e.pageX - 8 });
       }
     }
     $(window).mousemove(pin_move);
@@ -228,9 +236,9 @@
 
       if(moved) {
         //get the element underneath the pin
-        cushion.toggleClass('sN_hidden');
+        $(document.documentElement).toggleClass('sN_all_hidden');
         var target = document.elementFromPoint(e.pageX, e.pageY);
-        cushion.toggleClass('sN_hidden');
+        $(document.documentElement).toggleClass('sN_all_hidden');
 
         //place pin
         place_pin(cushion.attr('id'), target, e.pageX, e.pageY);
@@ -277,7 +285,6 @@
     elem.find('.sN_text').text(citation.text);
   }
   function update_side_count(){
-    save_pins();
     $('#sN_side_count').text(annotations.length)[(annotations.length ? 'add' : 'remove')+'Class']('sN_has_citations');
   }
 
@@ -320,10 +327,10 @@
 
   //Action button handlers
   $('#sN_menu>.sN_button:not(#sN_toggle)').live('click',function(){
-    $(document.documentElement).removeClass('pins_hidden');
+    $(document.documentElement).removeClass('sN_pins_hidden');
   })
   $('#sN_add').live('click', do_add);
-  $('#sN_toggle').live('click', function(){ if(annotations.length){ $(document.documentElement).toggleClass('pins_hidden'); } });
+  $('#sN_toggle').live('click', function(){ if(annotations.length){ $(document.documentElement).toggleClass('sN_pins_hidden'); } });
   $('#sN_clear').live('click', clear_pins);
   $('#sN_side_count').live('click', function(){
     if(annotations.length){
@@ -345,7 +352,7 @@
             </div>\
             <textarea></textarea>\
        </div>');
-    return into ? pin.appendTo(into) : pin;
+    return into ? pin.prependTo(into) : pin;
   }
 
   function template_sidebar_item(){
@@ -412,7 +419,7 @@
         type: 'get',
         dataType: 'json',
         success : function(data) {
-          // XXX: hydrate the session into dom elements
+          load_pins(data.notes);
           exports.session = data;
           longPoll();
         },
