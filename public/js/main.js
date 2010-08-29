@@ -8,13 +8,14 @@
       annotations = [],
       toJSON = Object.toJSON || JSON.stringify;
 
-  exports.annotations = annotations; //XXX for testing
+  exports.annotations = annotations;
 
   ///////
   /// NODE IDENTIFICATION & MATCHING
 
-  exports.hash_node = function hash_node(x) {
-    var ret = $.data(x, AH), html, i, ii, ix;
+  exports.hash_node = hash_node;
+  function hash_node(x) {
+    var ret = (x.appendTo ? x.data(AH) : $.data(x, AH)), html, i, ii, ix;
     if (ret) {  return ret; }
     html = $(x).html().replace(/\W/g,'');
     ret = 0 - (-1 >>> 1);
@@ -36,7 +37,8 @@
     return null;
   }
 
-  exports.get_node = function get_node(n, pathstr) {
+  exports.get_node = get_node;
+  function get_node(n, pathstr) {
     var res = LUT[n],
         path, working;
     if (!pathstr || !res || !res.push) {
@@ -59,7 +61,8 @@
     }
   };
 
-  exports.path_node = function path_node(x) {
+  exports.path_node = path_node;
+  function path_node(x) {
     var path = [];
     $(x).parentsUntil('body').andSelf().each(function(i, el){
       var str = el.nodeName.toLowerCase(),
@@ -81,6 +84,63 @@
 
   ///////
   /// EVENT HANDLING
+  function save_pins() {
+    var i = 0, l = exports.annotations.length, pin;
+    exports.session = {url : window.location.toString(), notes: []};
+    for (i; i<l; i++) {
+      pin = exports.annotations[i];
+      exports.session.notes.push({
+        hash: pin.hash,
+        path: pin.path,
+        text: pin.text,
+        anchor: pin.anchor,
+        bounds: pin.bounds
+      });
+    }
+    $.ajax({
+      url: 'http://sitations.com/citation/' + exports.sessionId,
+      type: 'put',
+      contentType: 'application/json',
+      dataType: 'json',
+      data : toJSON(exports.session),
+      sucess : function(data) {},
+      error : function() { console.dir(arguments) }
+    });
+  }
+
+  exports.load_pins = load_pins;
+  function load_pins(arr) {
+    var cur, target, cushion;
+    arr = arr || annotations;
+    clear_pins();
+    annotations = arr;
+    for (var i = 0, ii = arr.length; i < ii; i++) {
+      cur = annotations[i];
+      target = get_node(cur.hash, cur.path);
+      if (!target) {
+        console.log('failed to find', cur.hash, cur.path)
+        continue;
+      }
+      cur.id = i;
+      cur.cushion = template_pin(target)
+      create_pin(cur, $(target));
+      update_pin({}, cur);
+      update_sidebar_item({}, cur);
+    }
+  }
+
+  exports.clear_pins = clear_pins;
+  function clear_pins() {
+    annotations = [];
+    $('.sN_pin_cushion').remove();
+    $(document.body).trigger('clear.pin');
+  }
+
+  function create_pin(citation, target) {
+    citation.cushion.css({top: citation.anchor.y - 8, left: citation.anchor.x - 8, position: 'absolute'}).appendTo(target);
+    target.css('position', target.css('position').replace('static','relative'));
+    $(document.body).trigger('place.pin',[citation]);
+  }
 
   function place_pin(id, target, pageX, pageY) {
     target = $(target);
@@ -92,11 +152,9 @@
         bounds = $.extend({}, anchor),
         citation;
     //console.log(id, cushion, target);
-    cushion.css({top: anchor.y - 8, left: anchor.x - 8, position: 'absolute'}).appendTo(target);
-    target.css('position', target.css('position').replace('static','relative'));
     citation = {
-      path : exports.path_node(target),
-      hash : exports.hash_node(target),
+      path : path_node(target),
+      hash : hash_node(target),
       text : cushion.find("textarea").val(),
       anchor : {
         x: anchor.x,
@@ -112,7 +170,7 @@
       id : id
     };
     annotations[id] = citation;
-    $(document.body).trigger('place.pin',[citation]);
+    create_pin(citation, target)
   }
 
   function do_add(e){
@@ -219,6 +277,7 @@
     elem.find('.sN_text').text(citation.text);
   }
   function update_side_count(){
+    save_pins();
     $('#sN_side_count').text(annotations.length)[(annotations.length ? 'add' : 'remove')+'Class']('sN_has_citations');
   }
 
@@ -226,7 +285,6 @@
   $(document.body).bind('clear.pin', update_side_count);
   $(document.body).bind('remove.pin', update_side_count);
 
-  //$(document.body).bind('place.pin', update_sidebar_item);
   $(document.body).bind('text.pin', update_sidebar_item);
   $(document.body).bind('clear.pin', function(){
     $('#sN_sidebar').empty().addClass('sN_hidden');
@@ -266,7 +324,7 @@
   })
   $('#sN_add').live('click', do_add);
   $('#sN_toggle').live('click', function(){ if(annotations.length){ $(document.documentElement).toggleClass('pins_hidden'); } });
-  $('#sN_clear').live('click', function(){annotations = [];$('.sN_pin_cushion').remove();$(document.body).trigger('clear.pin')});
+  $('#sN_clear').live('click', clear_pins);
   $('#sN_side_count').live('click', function(){
     if(annotations.length){
       $('#sN_sidebar').toggleClass('sN_hidden');
@@ -329,7 +387,7 @@
       $.data(el, AH, exports.hash_node(el));
     });
 
-    window.$ = $; //XXX for testing
+    load_pins();
   });
 
   // The bookmarklet is ready for use
@@ -393,8 +451,10 @@
         type: "get",
         dataType: "json",
         success : function(session) {
-          exports.session = session;
-          setCitationSession(session._id);
+          if (session) {
+            exports.session = session;
+            setCitationSession(session._id);
+          }
         },  
         error : function(session) {
           // TODO: bit of error handling might be handy here?
